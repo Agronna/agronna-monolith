@@ -1,0 +1,23 @@
+<aside class="admin-sidebar" id="adminSidebar">
+  <div class="p-3 border-bottom border-secondary">
+    <h5 class="mb-0 text-white">Menu</h5>
+  </div>
+
+  <nav class="nav flex-column mt-2">
+    <%= link_to "Dashboard",
+        "root_path",
+        class: "nav-link #{'active' if current_page?(root_path)}" %>
+
+    <%= link_to "Usuários",
+        "users_path",
+        class: "nav-link #{'active' if controller_name == 'users'}" %>
+
+    <%= link_to "Relatórios",
+        "reports_path",
+        class: "nav-link #{'active' if controller_name == 'reports'}" %>
+
+    <%= link_to "Configurações",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+  </nav>
+</aside>
