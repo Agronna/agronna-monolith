@@ -24,6 +24,18 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class="admin-wrapper">
+      <%= render "/shared/sidebar" %>
+
+      <div class="admin-content">
+        <%= render "/shared/navbar" %>
+
+        <main class="admin-main">
+          <%= yield %>
+        </main>
+
+        <%= render "/shared/footer" %>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,0 +1,24 @@
+<header class="admin-header navbar navbar-expand-lg px-3">
+  <button
+    class="btn btn-outline-light d-lg-none me-3"
+    id="sidebarToggle"
+    type="button"
+  >
+    ☰
+  </button>
+
+  <span class="navbar-brand mb-0 h1 text-white">
+    Admin Panel
+  </span>
+
+  <div class="ms-auto d-flex align-items-center">
+    <span class="me-3 small">
+      Olá, <strong><%= "current_user&.name" || "Usuário" %></strong>
+    </span>
+
+    <%= link_to "Sair",
+        "destroy_user_session_path",
+        method: :delete,
+        class: "btn btn-sm btn-outline-light" %>
+  </div>
+</header>
