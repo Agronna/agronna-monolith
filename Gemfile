@@ -41,7 +41,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # bootstrap
-gem "bootstrap", "~> 5.3", ">= 5.3.5"
+gem "bootstrap", "~> 5.3"
 gem "sassc-rails"
 
 group :development, :test do
