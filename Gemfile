@@ -40,9 +40,13 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
-# bootstrap
 gem "bootstrap", "~> 5.3", ">= 5.3.5"
+
 gem "sassc-rails"
+
+# gem "audited", "~> 5.0"
+
+gem "cancancan"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -56,6 +60,8 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "bullet"
 end
 
 group :development do
