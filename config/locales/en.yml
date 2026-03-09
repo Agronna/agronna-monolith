@@ -29,3 +29,11 @@
 
 en:
   hello: "Hello world"
+
+  activemodel:
+    errors:
+      models:
+        tenant:
+          attributes:
+            subdomain:
+              invalid_subdomain: "must contain only letters, numbers and hyphens"
