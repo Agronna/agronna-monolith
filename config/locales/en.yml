@@ -37,3 +37,16 @@ en:
           attributes:
             subdomain:
               invalid_subdomain: "must contain only letters, numbers and hyphens"
+
+  users:
+    created: "User was successfully created."
+    updated: "User was successfully updated."
+
+  sessions:
+    signed_in: "Signed in successfully."
+    signed_out: "Signed out successfully."
+    invalid_credentials: "Invalid email or password."
+    login_required: "You must be logged in."
+
+  errors:
+    tenant_required: "Tenant (subdomain or X-Tenant header) is required."

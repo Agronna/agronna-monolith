@@ -18,6 +18,7 @@ Documentação da estrutura de multitenancy implementada no projeto (abordagem *
 ### 2. Model `Tenant`
 
 - **Arquivo:** `app/models/tenant.rb`
+- **Owner (administrador principal da conta):** `belongs_to :owner, class_name: "User"` — cada conta tem um usuário principal (dono) que pode adicionar outros usuários à conta.
 - Validações:
   - `name` e `subdomain` obrigatórios
   - `subdomain` único (case insensitive)
@@ -25,6 +26,13 @@ Documentação da estrutura de multitenancy implementada no projeto (abordagem *
   - Subdomínios reservados: `www`, `admin`, `api`, `mail`, `ftp`, `app`
 - Método de classe: `Tenant.find_by_subdomain(subdomain)`
 - Normalização: subdomínio em minúsculas e sem espaços
+
+### 2.1. Usuários e dono da conta
+
+- **Tabela `users`:** `tenant_id`, `name`, `email`, `password_digest`, `role` (user, sub_admin, admin).
+- **Tenant.owner_id:** aponta para o usuário que é o **administrador principal da conta**. Só esse usuário (ou outro admin) pode gerenciar usuários da conta.
+- O primeiro usuário com role `admin` criado na conta é automaticamente definido como dono (`owner`) do tenant.
+- **Ability (CanCanCan):** o dono da conta (`user.account_owner?`) ou qualquer usuário com role `admin` pode `:manage, User` (listar, criar, editar). Sub_admin e user só podem ler/editar o próprio perfil.
 
 ### 3. Current tenant (`Current`)
 
@@ -50,6 +58,7 @@ Documentação da estrutura de multitenancy implementada no projeto (abordagem *
 
 - **Arquivo:** `db/seeds.rb`
 - Tenant de exemplo para desenvolvimento: subdomínio `app`, nome "Agronna App"
+- Usuário administrador principal: `admin@agronna.local` / `senha123`, definido como dono da conta (`tenant.owner_id`)
 
 ### 7. Tradução
 
@@ -85,6 +94,13 @@ Documentação da estrutura de multitenancy implementada no projeto (abordagem *
 
 - Configurar subdomínios no `/etc/hosts` se for testar por subdomínio
 - Ou usar o header `X-Tenant: app` (tenant criado no seed)
+
+### Fluxo “conta + dono + usuários”
+
+1. **Conta (Tenant):** identificada por subdomínio (ou header). Tem um **dono** (`owner_id` → User).
+2. **Dono da conta:** usuário principal que pode adicionar outros usuários (sub_admin, user) à conta via `/users/new`.
+3. **Novos usuários:** sempre pertencem à conta atual (`Current.tenant`); apenas admin/dono pode criar.
+4. **Verificar dono:** `Current.tenant.owner` ou `current_user.account_owner?`
 
 ---
 

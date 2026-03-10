@@ -6,11 +6,24 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
 
   before_action :set_current_tenant
+  before_action :set_current_user
+
+  helper_method :current_user
 
   private
 
   def set_current_tenant
     subdomain = request.subdomain.presence || request.env["HTTP_X_TENANT"]
     Current.tenant = Tenant.find_by_subdomain(subdomain) if subdomain.present?
+  end
+
+  def set_current_user
+    return unless Current.tenant.present? && session[:user_id].present?
+
+    Current.user = User.find_by(id: session[:user_id])
+  end
+
+  def current_user
+    Current.user
   end
 end
