@@ -44,7 +44,7 @@ gem "bootstrap", "~> 5.3", ">= 5.3.5"
 
 gem "sassc-rails"
 
-# gem "audited", "~> 5.0"
+gem "audited", "~> 5.8"
 
 gem "cancancan"
 
