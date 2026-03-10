@@ -13,7 +13,7 @@
 
   <div class="ms-auto d-flex align-items-center">
     <span class="me-3 small">
-      Olá, <strong><%= "current_user&.name" || "Usuário" %></strong>
+      Olá, <strong><%= current_user&.name || "Usuário" %></strong>
     </span>
 
     <%= link_to "Sair",
