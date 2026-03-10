@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
+  layout "guest", only: [ :new, :create ]
+  skip_before_action :require_login, only: [ :new, :create ]
   before_action :require_tenant, only: [ :new, :create ]
 
   def new

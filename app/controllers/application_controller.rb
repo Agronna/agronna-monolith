@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_current_tenant
   before_action :set_current_user
+  before_action :require_login
 
   helper_method :current_user
 
@@ -25,5 +26,11 @@ class ApplicationController < ActionController::Base
 
   def current_user
     Current.user
+  end
+
+  def require_login
+    return if current_user.present?
+
+    redirect_to new_session_path, alert: t("sessions.login_required")
   end
 end
