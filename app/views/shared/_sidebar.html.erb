@@ -4,20 +4,54 @@
   </div>
 
   <nav class="nav flex-column mt-2">
+
+    <%= link_to "Agendamento",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+
+    <%= link_to "Ativos e Passivos",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+
+    <%= link_to "Comprovantes de Pagamento",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+
     <%= link_to "Dashboard",
-        "root_path",
+        root_path,
         class: "nav-link #{'active' if current_page?(root_path)}" %>
+
+    <%= link_to "Funcionários da Secretária",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+
+    <%= link_to "Maquinários",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+
+    <%= link_to "Ordem de Serviço",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+
+    <%= link_to "Prestadores de Serviços",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+
+    <%= link_to "Produtores",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+
+    <%= link_to "Propriedades",
+        "settings_path",
+        class: "nav-link #{'active' if controller_name == 'settings'}" %>
+
+    <%= link_to "Secretarias",
+        secretaries_path,
+        class: "nav-link #{'active' if controller_name == 'secretaries'}" %>
 
     <%= link_to "Usuários",
         users_path,
         class: "nav-link #{'active' if controller_name == 'users'}" %>
 
-    <%= link_to "Relatórios",
-        "reports_path",
-        class: "nav-link #{'active' if controller_name == 'reports'}" %>
-
-    <%= link_to "Configurações",
-        "settings_path",
-        class: "nav-link #{'active' if controller_name == 'settings'}" %>
   </nav>
 </aside>

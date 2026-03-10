@@ -7,5 +7,6 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy", as: :logout
 
+  resources :secretaries, path: "/secretarias", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
   resources :users, path: "/usuarios", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
 end
