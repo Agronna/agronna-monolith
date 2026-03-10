@@ -3,7 +3,7 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 # Multitenancy: tenant padrão para desenvolvimento
-tenant = Tenant.find_or_create_by!(subdomain: "app") do |t|
+tenant = Tenant.find_or_create_by!(subdomain: "agronna") do |t|
   t.name = "Agronna App"
 end
 
@@ -14,5 +14,6 @@ if Rails.env.development?
     u.password = "senha123"
     u.role = :admin
   end
+
   tenant.update_column(:owner_id, admin.id) if tenant.owner_id.blank?
 end
