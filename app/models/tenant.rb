@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Tenant < ApplicationRecord
+  belongs_to :owner, class_name: "User", optional: true
+  has_many :users, dependent: :restrict_with_error
+
   validates :name, presence: true
   validates :subdomain, presence: true, uniqueness: { case_sensitive: false }
   validates :subdomain, format: { with: /\A[a-z0-9][a-z0-9\-]*[a-z0-9]\z/i, message: :invalid_subdomain },

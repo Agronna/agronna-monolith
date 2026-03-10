@@ -2,4 +2,10 @@ Rails.application.routes.draw do
   root "home#index"
 
   post "home/submit", to: "home#submit"
+
+  get "login", to: "sessions#new", as: :new_session
+  post "login", to: "sessions#create"
+  delete "logout", to: "sessions#destroy", as: :logout
+
+  resources :users, only: [ :index, :new, :create, :edit, :update ]
 end
