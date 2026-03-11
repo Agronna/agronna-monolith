@@ -1,5 +1,13 @@
 <footer class="admin-footer">
-  <small>
-    © <%= Time.current.year %> — Agronna • Todos os direitos reservados
-  </small>
+  <div class="admin-footer__inner">
+    <div class="admin-footer__copy">
+      <span class="admin-footer__logo" aria-hidden="true">AG</span>
+      <small>© <%= Time.current.year %> Agronna — Todos os direitos reservados</small>
+    </div>
+    <nav class="admin-footer__links" aria-label="Links do rodapé">
+      <%= link_to "Dashboard", root_path, class: "admin-footer__link" %>
+      <%= link_to "Secretarias", secretaries_path, class: "admin-footer__link" %>
+      <%= link_to "Usuários", users_path, class: "admin-footer__link" %>
+    </nav>
+  </div>
 </footer>

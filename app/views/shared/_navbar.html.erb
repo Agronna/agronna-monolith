@@ -1,24 +1,23 @@
-<header class="admin-header navbar navbar-expand-lg px-3">
-  <button
-    class="btn btn-outline-light d-lg-none me-3"
-    id="sidebarToggle"
-    type="button"
-  >
-    ☰
+<header class="admin-header">
+  <button type="button" class="admin-header__toggle d-lg-none" id="sidebarToggle" aria-expanded="false" aria-controls="adminSidebar" aria-label="Abrir menu">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+    </svg>
   </button>
 
-  <!--<span class="navbar-brand mb-0 h1 text-white">
-    Admin Panel
-  </span>-->
+  <div class="admin-header__brand d-none d-lg-block">
+    <span class="admin-header__brand-text">Agronna</span>
+  </div>
 
-  <div class="ms-auto d-flex align-items-center">
-    <span class="me-3 small">
-      Olá, <strong><%= current_user&.name || "Usuário" %></strong>
-    </span>
-
-    <%= link_to "Sair",
-        "destroy_user_session_path",
-        method: :delete,
-        class: "btn btn-sm btn-outline-light" %>
+  <div class="admin-header__actions">
+    <div class="admin-header__user">
+      <span class="admin-header__user-label">Olá,</span>
+      <span class="admin-header__user-name"><%= current_user&.name.presence || "Usuário" %></span>
+    </div>
+    <%= button_to "Sair",
+          logout_path,
+          method: :delete,
+          class: "admin-header__btn-logout",
+          form: { data: { turbo_confirm: "Deseja realmente sair?" } } %>
   </div>
 </header>
