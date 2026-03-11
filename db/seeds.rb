@@ -7,13 +7,24 @@ tenant = Tenant.find_or_create_by!(subdomain: "agronna") do |t|
   t.name = "Agronna App"
 end
 
+# Secretaria padrão (necessária para vincular usuários)
+secretary = Secretary.unscoped.find_or_create_by!(tenant: tenant, cnpj: "00000000000191") do |s|
+  s.name = "Secretaria Padrão"
+  s.corporate_name = "Secretaria Padrão Agronna"
+  s.email = "secretaria@agronna.local"
+  s.prefecture_name = "Município Padrão"
+  s.status = :ativo
+end
+
 # Administrador principal da conta (apenas em desenvolvimento)
 if Rails.env.development?
   admin = User.unscoped.find_or_create_by!(email: "admin@agronna.local", tenant: tenant) do |u|
     u.name = "Administrador"
     u.password = "senha123"
     u.role = :admin
+    u.secretary = secretary
   end
+  admin.update_columns(secretary_id: secretary.id) if admin.secretary_id.blank?
 
   tenant.update_column(:owner_id, admin.id) if tenant.owner_id.blank?
 end

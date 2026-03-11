@@ -102,6 +102,10 @@ Documentação da estrutura de multitenancy implementada no projeto (abordagem *
 3. **Novos usuários:** sempre pertencem à conta atual (`Current.tenant`); apenas admin/dono pode criar.
 4. **Verificar dono:** `Current.tenant.owner` ou `current_user.account_owner?`
 
+### Novas tabelas e relação com Secretarias
+
+Para o padrão de **novas tabelas** (só tenant ou tenant + secretaria), consulte **ESTRUTURA-TABELAS-TENANT-SECRETARY.md**.
+
 ---
 
 ## Arquivos criados/alterados

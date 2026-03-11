@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_231433) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_11_002725) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -72,7 +72,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_231433) do
     t.string "name", null: false
     t.string "prefecture_name", null: false
     t.integer "status", default: 0, null: false
+    t.bigint "tenant_id"
     t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_secretaries_on_tenant_id"
   end
 
   create_table "tenants", force: :cascade do |t|
@@ -91,14 +93,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_231433) do
     t.string "name", null: false
     t.string "password_digest", null: false
     t.integer "role", default: 0, null: false
+    t.bigint "secretary_id"
     t.bigint "tenant_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["secretary_id"], name: "index_users_on_secretary_id"
     t.index ["tenant_id", "email"], name: "index_users_on_tenant_id_and_email", unique: true
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "secretaries", "tenants"
   add_foreign_key "tenants", "users", column: "owner_id"
+  add_foreign_key "users", "secretaries"
   add_foreign_key "users", "tenants"
 end

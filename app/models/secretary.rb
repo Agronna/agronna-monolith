@@ -1,9 +1,16 @@
 class Secretary < ApplicationRecord
-  validates :cnpj, presence: true, uniqueness: { case_sensitive: false }
-  validates :corporate_name, presence: true, uniqueness: { case_sensitive: false }
-  validates :email, presence: true, uniqueness: { case_sensitive: false }
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
-  validates :prefecture_name, presence: true, uniqueness: { case_sensitive: false }
+  include BelongsToTenant
+
+  has_many :users, dependent: :restrict_with_error
+  # has_many :agendamentos, dependent: :restrict_with_error
+  # etc. — descomente ao criar as tabelas relacionadas
+
+  validates :cnpj, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
+  validates :corporate_name, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
+  validates :email, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
+  validates :name, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
+  validates :prefecture_name, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
+  validates :tenant_id, presence: true
 
   enum :status, { inativo: 0, ativo: 1 }, prefix: true
   normalizes :cnpj, with: ->(cnpj) { cnpj.to_s.strip.gsub(/[^0-9]/, "") }

@@ -3,6 +3,7 @@
 class Tenant < ApplicationRecord
   belongs_to :owner, class_name: "User", optional: true
   has_many :users, dependent: :restrict_with_error
+  has_many :secretaries, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :subdomain, presence: true, uniqueness: { case_sensitive: false }
