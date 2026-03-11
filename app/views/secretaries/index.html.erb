@@ -45,13 +45,11 @@
                 <td>
                   <%= secretary.email %>
                 </td>
-
+              
                 <td>
-                  <% if secretary.active? %>
-                    <span class="badge bg-success">Ativo</span>
-                  <% else %>
-                    <span class="badge bg-secondary">Inativo</span>
-                  <% end %>
+                  <span class="badge <%= secretary.status_active? ? 'bg-success' : 'bg-secondary' %>">
+                    <%= secretary.status_active? ? "Ativo" : "Inativo" %>
+                  </span>
                 </td>
 
                 <td class="text-end">

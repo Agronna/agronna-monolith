@@ -89,9 +89,22 @@ pt-BR:
             
   errors:
     format: "%{message}"
+    tenant_required: "Acesse pelo subdomínio da sua conta ou informe o header X-Tenant."
+
+  sessions:
+    login_required: "Você precisa estar logado para acessar esta página."
+    signed_in: "Login realizado com sucesso."
+    signed_out: "Você saiu do sistema."
+    invalid_credentials: "E-mail ou senha inválidos."
+    expired: "Sua sessão expirou. Faça login novamente."
 
   home:
     name: Início
+
+  secretaries:
+    created: "Secretária criada com sucesso."
+    updated: "Secretária atualizada com sucesso."
+    destroyed: "Secretária excluída com sucesso."
   views:
     pagination:
       previous: "&laquo; Anterior"

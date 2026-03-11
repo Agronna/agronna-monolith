@@ -3,6 +3,7 @@
 class SessionsController < ApplicationController
   layout "guest", only: [ :new, :create ]
   skip_before_action :require_login, only: [ :new, :create ]
+  skip_before_action :check_session_expiry, only: [ :new, :create ]
   before_action :require_tenant, only: [ :new, :create ]
 
   def new
@@ -14,6 +15,7 @@ class SessionsController < ApplicationController
     user = User.find_by(email: email)
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
+      session[:expires_at] = 12.hours.from_now
       redirect_to root_path, notice: t("sessions.signed_in")
     else
       flash.now[:alert] = t("sessions.invalid_credentials")

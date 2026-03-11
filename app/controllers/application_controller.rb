@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_current_tenant
   before_action :set_current_user
+  before_action :check_session_expiry
   before_action :require_login
 
   helper_method :current_user
@@ -28,7 +29,17 @@ class ApplicationController < ActionController::Base
     Current.user
   end
 
+  def check_session_expiry
+    return if session[:expires_at].blank?
+    return if Time.current < session[:expires_at]
+
+    reset_session
+    redirect_to new_session_path, alert: t("sessions.expired")
+  end
+
   def require_login
+    # Sem tenant: não exige login (evita loop); a tela pode exibir aviso para acessar com subdomínio
+    return if Current.tenant.blank?
     return if current_user.present?
 
     redirect_to new_session_path, alert: t("sessions.login_required")

@@ -13,7 +13,7 @@ secretary = Secretary.unscoped.find_or_create_by!(tenant: tenant, cnpj: "0000000
   s.corporate_name = "Secretaria Padrão Agronna"
   s.email = "secretaria@agronna.local"
   s.prefecture_name = "Município Padrão"
-  s.status = :ativo
+  s.status = :active
 end
 
 # Administrador principal da conta (apenas em desenvolvimento)

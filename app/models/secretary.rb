@@ -12,7 +12,7 @@ class Secretary < ApplicationRecord
   validates :prefecture_name, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
   validates :tenant_id, presence: true
 
-  enum :status, { inativo: 0, ativo: 1 }, prefix: true
+  enum :status, { inactive: 0, active: 1 }, prefix: true
   normalizes :cnpj, with: ->(cnpj) { cnpj.to_s.strip.gsub(/[^0-9]/, "") }
   normalizes :corporate_name, with: ->(corporate_name) { corporate_name.to_s.strip }
   normalizes :email, with: ->(email) { email.to_s.strip.downcase }

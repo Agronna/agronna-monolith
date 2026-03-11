@@ -1,6 +1,6 @@
 class SecretariesController < ApplicationController
   before_action :set_secretary, only: %i[ show edit update destroy ]
-  # load_and_authorize_resource except: [ :create, :new ]
+  load_and_authorize_resource except: [ :create, :new, :index, :edit ]
   # GET /secretaries or /secretaries.json
   def index
     @secretaries = Secretary.all
@@ -26,7 +26,7 @@ class SecretariesController < ApplicationController
 
     respond_to do |format|
       if @secretary.save
-        format.html { redirect_to @secretary, notice: "Secretary was successfully created." }
+        format.html { redirect_to @secretary, notice: t("secretaries.created") }
         format.json { render :show, status: :created, location: @secretary }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -39,7 +39,7 @@ class SecretariesController < ApplicationController
   def update
     respond_to do |format|
       if @secretary.update(secretary_params)
-        format.html { redirect_to @secretary, notice: "Secretary was successfully updated.", status: :see_other }
+        format.html { redirect_to @secretary, notice: t("secretaries.updated"), status: :see_other }
         format.json { render :show, status: :ok, location: @secretary }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -53,7 +53,7 @@ class SecretariesController < ApplicationController
     @secretary.destroy!
 
     respond_to do |format|
-      format.html { redirect_to secretaries_path, notice: "Secretary was successfully destroyed.", status: :see_other }
+      format.html { redirect_to secretaries_path, notice: t("secretaries.destroyed"), status: :see_other }
       format.json { head :no_content }
     end
   end

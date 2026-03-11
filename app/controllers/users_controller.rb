@@ -4,7 +4,6 @@
 # Sub-admin e user podem apenas editar o próprio perfil.
 class UsersController < ApplicationController
   before_action :require_tenant
-  before_action :require_login
   load_and_authorize_resource except: [ :create, :new ]
 
   def index
@@ -48,12 +47,6 @@ class UsersController < ApplicationController
     return if Current.tenant.present?
 
     redirect_to root_path, alert: t("errors.tenant_required")
-  end
-
-  def require_login
-    return if current_user.present?
-
-    redirect_to new_session_path, alert: t("sessions.login_required")
   end
 
   def user_params
