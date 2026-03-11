@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Secretárias</h2>
+
+    <% if can? :create, Secretary %>
+      <%= link_to "Nova Secretária", new_secretary_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+  
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>CNPJ</th>
+              <th>Nome</th>
+              <th>Razão Social</th>
+              <th>Prefeitura</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th class="text-end">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @secretaries.each do |secretary| %>
+              <tr>
+                <td>
+                  <%= secretary.cnpj %>
+                </td>
+
+                <td>
+                  <%= secretary.name %>
+                </td>
+
+                <td>
+                  <%= secretary.corporate_name %>
+                </td>
+
+                <td>
+                  <%= secretary.prefecture_name %>
+                </td>
+
+                <td>
+                  <%= secretary.email %>
+                </td>
+
+                <td>
+                  <% if secretary.active? %>
+                    <span class="badge bg-success">Ativo</span>
+                  <% else %>
+                    <span class="badge bg-secondary">Inativo</span>
+                  <% end %>
+                </td>
+
+                <td class="text-end">
+                  <% if can? :update, secretary %>
+                    <%= link_to "Editar", edit_secretary_path(secretary), class: "btn btn-sm btn-outline-primary" %>
+                  <% end %>
+                </td>
+
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

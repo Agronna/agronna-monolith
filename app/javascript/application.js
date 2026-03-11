@@ -7,10 +7,26 @@ import "bootstrap";
 document.addEventListener("turbo:load", () => {
   const toggle = document.getElementById("sidebarToggle");
   const sidebar = document.getElementById("adminSidebar");
+  const closeBtn = document.getElementById("sidebarClose");
+  const overlay = document.getElementById("sidebarOverlay");
 
-  if (toggle && sidebar) {
-    toggle.addEventListener("click", () => {
-      sidebar.classList.toggle("show");
-    });
-  }
+  const openSidebar = () => {
+    sidebar?.classList.add("show");
+    overlay?.classList.add("show");
+    toggle?.setAttribute("aria-expanded", "true");
+    document.body.classList.add("sidebar-open");
+  };
+
+  const closeSidebar = () => {
+    sidebar?.classList.remove("show");
+    overlay?.classList.remove("show");
+    toggle?.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("sidebar-open");
+  };
+
+  toggle?.addEventListener("click", () => {
+    sidebar?.classList.contains("show") ? closeSidebar() : openSidebar();
+  });
+  closeBtn?.addEventListener("click", closeSidebar);
+  overlay?.addEventListener("click", closeSidebar);
 });
