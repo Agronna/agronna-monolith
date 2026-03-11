@@ -13,12 +13,14 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    @secretaries = Secretary.all
     authorize! :create, User
   end
 
   def create
     @user = User.new(user_params)
     @user.tenant = Current.tenant
+    @secretaries = Secretary.all
     authorize! :create, @user
 
     if @user.save
@@ -29,6 +31,7 @@ class UsersController < ApplicationController
   end
 
   def edit
+    @secretaries = Secretary.all
   end
 
   def update
@@ -54,7 +57,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    p = params.require(:user).permit(:name, :email, :password, :password_confirmation, :role)
+    p = params.require(:user).permit(:name, :email, :password, :password_confirmation, :role, :secretary_id)
     unless current_user&.admin?
       p.delete(:role)
     else
@@ -66,7 +69,7 @@ class UsersController < ApplicationController
   end
 
   def update_params
-    list = [ :name, :email ]
+    list = [ :name, :email, :secretary_id ]
     list << :role if current_user&.admin?
     list << :password << :password_confirmation if params[:user][:password].present?
     params.require(:user).permit(list)

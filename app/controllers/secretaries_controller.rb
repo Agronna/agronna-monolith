@@ -22,6 +22,7 @@ class SecretariesController < ApplicationController
   # POST /secretaries or /secretaries.json
   def create
     @secretary = Secretary.new(secretary_params)
+    @secretary.tenant = Current.tenant
 
     respond_to do |format|
       if @secretary.save

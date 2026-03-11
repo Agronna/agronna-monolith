@@ -8,13 +8,16 @@ class User < ApplicationRecord
   has_secure_password
 
   has_one :owned_tenant, class_name: "Tenant", foreign_key: :owner_id, dependent: :nullify
+  belongs_to :secretary, optional: true
 
   enum :role, { user: 0, sub_admin: 1, admin: 2 }, prefix: true
 
   validates :name, presence: true
+  validates :secretary_id, presence: true
   validates :email, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 6 }, if: -> { password.present? }
+  validate :secretary_must_belong_to_tenant
 
   normalizes :email, with: ->(email) { email.to_s.strip.downcase }
 
@@ -34,6 +37,13 @@ class User < ApplicationRecord
   end
 
   private
+
+  def secretary_must_belong_to_tenant
+    return if secretary_id.blank? || tenant_id.blank?
+    return if secretary&.tenant_id == tenant_id
+
+    errors.add(:secretary_id, :invalid)
+  end
 
   def assign_as_owner_if_first_admin
     return unless role_admin?

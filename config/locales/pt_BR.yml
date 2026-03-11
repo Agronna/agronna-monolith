@@ -1,0 +1,220 @@
+pt-BR:
+  date:
+    abbr_day_names:
+    - dom
+    - seg
+    - ter
+    - qua
+    - qui
+    - sex
+    - sáb
+    order:
+      - :day
+      - :month
+      - :year
+    month_names: [~, Janeiro, Feveiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
+    formats:
+      default: "%d/%m/%Y"
+      long: "%d de %B de %Y"
+      short: "%d de %B"
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M:%S"
+      text: "%a, %d de %B de %Y, %H:%M:%S %z"
+      long: "%d de %B de %Y, %H:%M"
+      short: "%d de %B, %H:%M"
+      presentation: "%d/%m/%Y, %H:%M"
+      text_mode: "%d de %B às %H:%M"
+      date_only: "%d/%m/%Y"
+  activerecord:
+    attributes:
+      address:
+        addressable: Endereço associado
+        state: Estado
+        city: Cidade
+        neighborhood: Bairro
+        street: Rua
+        number: Número
+        complement: Complemento
+        zip_code: Código Postal
+
+      user:
+        name: Nome do Usuário
+        email: E-mail do Usuário
+        password_digest: Senha do Usuário
+        password_reset_token: Redefinição de Senha do Usuário
+        password: Senha do Usuário
+
+    errors:
+      # format: "%{attribute} %{message}"
+
+      messages:
+        # blank: não pode ficar em branco
+        # invalid: não é válido
+        # too_short: é muito curto (mínimo %{count} caracteres)
+        record_invalid: 'A validação falhou: %{errors}'
+        restrict_dependent_destroy:
+          has_one: Não é possível excluir o registro pois existe um %{record} dependente
+          has_many: Não é possível excluir o registro pois existem %{record} dependentes
+          
+      models:
+        bill:
+          attributes:
+          payment_date: ""
+        user:
+          attributes:
+            name: 
+              blank: Nome do Usuário não pode ficar em branco
+            email: 
+              blank: E-mail do Usuário não pode ficar em branco
+              invalid: E-mail inválido
+            # password_digest:
+            #   blank: Senha do Usuário não pode ficar em branco
+            #   too_short: Senha do Usuário é muito curta (mínimo %{count} caracteres)
+            password:
+              blank: Senha do Usuário não pode ficar em branco
+              too_short: Senha do Usuário é muito curta (mínimo %{count} caracteres)
+        # customer:
+        #   attributes:
+        #     first_name:
+        #       blank: Nome do Cliente não pode ficar em branco
+        #     last_name:
+        #       blank: Sobrenome do Cliente não pode ficar em branco
+        #     email:
+        #       blank: E-mail do Cliente não pode ficar em branco
+        #     cpf:
+        #       blank: CPF do Cliente não pode ficar em branco
+        #     store:
+        #       required: Loja deve ser selecionado
+            
+  errors:
+    format: "%{message}"
+
+  home:
+    name: Início
+  views:
+    pagination:
+      previous: "&laquo; Anterior"
+      next: "Próximo &raquo;"
+      truncate: "…"
+  admin:
+    misc:
+      search: "Procurar"
+      filter: "Filtro"
+      refresh: "Atualizar"
+      show_all: "Mostrar todos"
+      add_filter: "Adicionar Filtro..."
+      bulk_menu_title: "Selecionar items..."
+      remove: "Remover"
+      add_new: "Adicionar novo"
+      chosen: "Escolher %{name}"
+      chose_all: "Escolher todos"
+      clear_all: "Limpar seleção"
+      up: "Up"
+      down: "Down"
+      navigation: "Navegaap"
+      log_out: "Sair"
+      ago: "atrás"
+    flash:
+      successful: "%{name} successfully %{action}"
+      error: "%{name} failed to be %{action}"
+      noaction: "No actions were taken"
+      model_not_found: "Model '%{model}' could not be found"
+      object_not_found: "%{model} with id '%{id}' could not be found"
+    table_headers:
+      model_name: "Model name"
+      last_used: "Last used"
+      records: "Registro"
+      username: "Usuário"
+      changes: "Mudanção"
+      created_at: "Data/Hora"
+      item: "Item"
+      message: "Messagem"
+    actions:
+      dashboard:
+        title: "Administração do Site"
+        menu: "Painel"
+        breadcrumb: "Painel"
+      index:
+        title: "Lista de %{model_label_plural}"
+        menu: "Lista"
+        breadcrumb: "%{model_label_plural}"
+      show:
+        title: "Detalhes para %{model_label} '%{object_label}'"
+        menu: "Exibir"
+        breadcrumb: "%{object_label}"
+      show_in_app:
+        menu: "Show in app"
+      new:
+        title: "Novo %{model_label}"
+        menu: "Adicionar novo"
+        breadcrumb: "Novo"
+        link: "Adicionar um novo %{model_label}"
+        done: "criado"
+      edit:
+        title: "Editar %{model_label} '%{object_label}'"
+        menu: "Editar"
+        breadcrumb: "Editar"
+        link: "Editar esse %{model_label}"
+        done: "atualizado"
+      delete:
+        title: "Apagar %{model_label} '%{object_label}'"
+        menu: "Apagar"
+        breadcrumb: "Apagar"
+        link: "Apagar '%{object_label}'"
+        done: "apagado"
+      bulk_delete:
+        title: "Apagar %{model_label_plural}"
+        menu: "Apagar vários"
+        breadcrumb: "Apagar vários"
+        bulk_link: "Apagar selecionados %{model_label_plural}"
+      export:
+        title: "Exportar %{model_label}"
+        menu: "Exportar"
+        breadcrumb: "Exportar"
+        link: "Exportar %{model_label_plural} encotrados"
+        bulk_link: "Exportar %{model_label_plural} selecionados"
+        done: "exported"
+      history_index:
+        title: "History for %{model_label_plural}"
+        menu: "History"
+        breadcrumb: "History"
+      history_show:
+        title: "History for %{model_label} '%{object_label}'"
+        menu: "History"
+        breadcrumb: "History"
+    form:
+      cancel: "Cancelar"
+      basic_info: "Informação Básica"
+      required: "Obrigatório"
+      optional: "Opcional"
+      one_char: "charactere"
+      char_length_up_to: "tamanho até"
+      char_length_of: "tamenho de"
+      save: "Salvar"
+      save_and_add_another: "Salvar e adicionar outro"
+      save_and_edit: "Salvar e editar"
+      all_of_the_following_related_items_will_be_deleted: "? The following related items may be deleted or orphaned:"
+      are_you_sure_you_want_to_delete_the_object: "Tem certeza que quer apagar este %{model_name}"
+      confirmation: "Sim, tenho certeza"
+      delete_confirmation: "Confirmação"
+      bulk_delete: "Os seguintes item serão apagados, eles podem deletar ou dependências orfãs:"
+    export:
+      confirmation: "Exportar para %{name}"
+      select: "Selecionar campos para exportar"
+      fields_from: "Campos de %{name}"
+      fields_from_associated: "Campos associados %{name}"
+      display: "Exibir %{name}: %{type}"
+      options_for: "Opções para %{name}"
+      empty_value_for_associated_objects: "<empty>"
+      click_to_reverse_selection: 'Clique para inverter a seleção'
+      csv:
+        header_for_root_methods: "%{name}" # 'model' está disponível
+        header_for_association_methods: "%{name} [%{association}]"
+        encoding_to: "Codificar para"
+        encoding_to_help: "Choose output encoding. Leave empty to let current input encoding untouched: (%{name})"
+        skip_header: "No header"
+        skip_header_help: "Do not output a header (no fields description)"
+        default_col_sep: ","
+        col_sep: "Separador de coluna"
+        col_sep_help: "Deixe em branco para ('%{value}') padrão" # value is default_col_sep
