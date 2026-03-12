@@ -16,7 +16,13 @@ class User < ApplicationRecord
   validates :secretary_id, presence: true
   validates :email, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, length: { minimum: 6 }, if: -> { password.present? }
+  validates :password,
+    length: { minimum: 6 },
+    format: {
+      with: /\A(?=.*[A-Z])(?=.*[\W_]).+\z/,
+      message: "Deve conter ao menos uma letra maiúscula e um caractere especial"
+    },
+    if: -> { password.present? }
   validate :secretary_must_belong_to_tenant
 
   normalizes :email, with: ->(email) { email.to_s.strip.downcase }
@@ -34,6 +40,15 @@ class User < ApplicationRecord
   # Usuário principal da conta (administrador que pode adicionar outros usuários à conta)
   def account_owner?
     Current.tenant.present? && Current.tenant.owner_id == id
+  end
+
+  # Ransack: atributos e associações permitidos para busca
+  def self.ransackable_attributes(auth_object = nil)
+    %w[name email created_at role secretary_id]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[secretary tenant]
   end
 
   private

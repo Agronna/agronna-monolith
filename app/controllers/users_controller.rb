@@ -7,7 +7,9 @@ class UsersController < ApplicationController
   load_and_authorize_resource except: [ :create, :new ]
 
   def index
-    @users = User.all
+    @q = User.ransack(params[:q])
+    @q.sorts = "name asc" if @q.sorts.empty?
+    @pagy, @users = pagy(:offset, @q.result.includes(:secretary), limit: 15)
   end
 
   def new
