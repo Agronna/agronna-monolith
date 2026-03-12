@@ -1,41 +1,137 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
+<div class="dashboard">
+  <header class="dashboard__header">
+    <div>
+      <h1 class="dashboard__title">
+        Olá, <%= current_user&.name.presence || "Usuário" %>
+      </h1>
+      <p class="dashboard__subtitle">Visão geral do sistema — Gestão Inteligente do Imóvel Rural</p>
+    </div>
+  </header>
 
-      <div class="card shadow-sm">
-        <div class="card-body">
-
-          <h3 class="card-title mb-4 text-center">
-            Teste Bootstrap + Rails 8
-          </h3>
-
-          <% if flash[:notice] %>
-            <div class="alert alert-success" role="alert">
-              <%= flash[:notice] %>
-            </div>
-          <% end %>
-
-          <%= form_with url: home_submit_path, method: :post, local: true do %>
-
-            <div class="mb-3">
-              <%= label_tag :nome, "Nome", class: "form-label" %>
-              <%= text_field_tag :nome, @nome, class: "form-control", placeholder: "Digite seu nome" %>
-            </div>
-
-            <div class="mb-3">
-              <%= label_tag :email, "E-mail", class: "form-label" %>
-              <%= email_field_tag :email, @email, class: "form-control", placeholder: "email@exemplo.com" %>
-            </div>
-
-            <div class="d-grid">
-              <%= submit_tag "Enviar", class: "btn btn-primary" %>
-            </div>
-
-          <% end %>
-
+  <section class="dashboard__kpis">
+    <div class="row g-3 g-lg-4">
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card kpi-card--primary">
+          <div class="kpi-card__icon">
+            <%= icon_svg(:users, width: 28, height: 28) %>
+          </div>
+          <div class="kpi-card__content">
+            <span class="kpi-card__value">12</span>
+            <span class="kpi-card__label">Usuários</span>
+          </div>
         </div>
       </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card kpi-card--secondary">
+          <div class="kpi-card__icon">
+            <%= icon_svg(:building, width: 28, height: 28) %>
+          </div>
+          <div class="kpi-card__content">
+            <span class="kpi-card__value">5</span>
+            <span class="kpi-card__label">Secretarias</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card kpi-card--success">
+          <div class="kpi-card__icon">
+            <%= icon_svg(:clipboard, width: 28, height: 28) %>
+          </div>
+          <div class="kpi-card__content">
+            <span class="kpi-card__value">28</span>
+            <span class="kpi-card__label">Ordens de serviço</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card kpi-card--neutral">
+          <div class="kpi-card__icon">
+            <%= icon_svg(:land, width: 28, height: 28) %>
+          </div>
+          <div class="kpi-card__content">
+            <span class="kpi-card__value">8</span>
+            <span class="kpi-card__label">Propriedades</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <div class="row g-4 mt-0">
+    <div class="col-12 col-lg-8">
+      <div class="dashboard-card">
+        <div class="dashboard-card__header">
+          <h2 class="dashboard-card__title">Acesso rápido</h2>
+        </div>
+        <div class="dashboard-card__body">
+          <div class="quick-links">
+            <%= link_to users_path, class: "quick-links__item" do %>
+              <span class="quick-links__icon quick-links__icon--users"></span>
+              <span class="quick-links__text">Usuários</span>
+              <%= icon_svg(:arrow_right, width: 18, height: 18, stroke_width: 2) %>
+            <% end %>
+            <%= link_to secretaries_path, class: "quick-links__item" do %>
+              <span class="quick-links__icon quick-links__icon--secretaries"></span>
+              <span class="quick-links__text">Secretarias</span>
+              <%= icon_svg(:arrow_right, width: 18, height: 18, stroke_width: 2) %>
+            <% end %>
+            <a href="#" class="quick-links__item quick-links__item--disabled">
+              <span class="quick-links__icon quick-links__icon--orders"></span>
+              <span class="quick-links__text">Ordens de serviço</span>
+              <span class="badge bg-light text-muted ms-auto">Em breve</span>
+            </a>
+            <a href="#" class="quick-links__item quick-links__item--disabled">
+              <span class="quick-links__icon quick-links__icon--properties"></span>
+              <span class="quick-links__text">Propriedades</span>
+              <span class="badge bg-light text-muted ms-auto">Em breve</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4">
+      <div class="dashboard-card">
+        <div class="dashboard-card__header">
+          <h2 class="dashboard-card__title">Atividade recente</h2>
+        </div>
+        <div class="dashboard-card__body">
+          <ul class="activity-list">
+            <li class="activity-list__item">
+              <span class="activity-list__dot activity-list__dot--primary"></span>
+              <div>
+                <span class="activity-list__text">Novo usuário cadastrado</span>
+                <span class="activity-list__meta">Hoje, 14:32</span>
+              </div>
+            </li>
+            <li class="activity-list__item">
+              <span class="activity-list__dot activity-list__dot--secondary"></span>
+              <div>
+                <span class="activity-list__text">Secretaria atualizada</span>
+                <span class="activity-list__meta">Ontem, 09:15</span>
+              </div>
+            </li>
+            <li class="activity-list__item">
+              <span class="activity-list__dot activity-list__dot--success"></span>
+              <div>
+                <span class="activity-list__text">Login realizado</span>
+                <span class="activity-list__meta">Ontem, 08:00</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard__footer-card mt-4">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-8">
+        <h3 class="h5 mb-1">Gestão Inteligente do Imóvel Rural</h3>
+        <p class="text-muted small mb-0">Soluções completas para controle de fazendas, chácaras e ordens de serviço.</p>
+      </div>
+      <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+        <span class="badge bg-primary px-3 py-2">Em desenvolvimento</span>
+      </div>
     </div>
   </div>
 </div>
