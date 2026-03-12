@@ -1,71 +1,67 @@
+# frozen_string_literal: true
+
 class SecretariesController < ApplicationController
-  before_action :set_secretary, only: %i[ show edit update destroy ]
-  load_and_authorize_resource except: [ :create, :new, :index, :edit ]
-  # GET /secretaries or /secretaries.json
+  before_action :require_tenant
+  before_action :set_secretary, only: %i[ edit update destroy ]
+  load_and_authorize_resource except: [ :create, :new ]
+
   def index
-    @secretaries = Secretary.all
+    @q = Secretary.ransack(params[:q])
+    @q.sorts = "name asc" if @q.sorts.empty?
+    @pagy, @secretaries = pagy(:offset, @q.result, limit: 15)
   end
 
-  # GET /secretaries/1 or /secretaries/1.json
-  def show
-  end
-
-  # GET /secretaries/new
   def new
     @secretary = Secretary.new
+    @secretary.build_address
+    authorize! :create, Secretary
   end
 
-  # GET /secretaries/1/edit
-  def edit
-  end
-
-  # POST /secretaries or /secretaries.json
   def create
     @secretary = Secretary.new(secretary_params)
     @secretary.tenant = Current.tenant
+    authorize! :create, @secretary
 
-    respond_to do |format|
-      if @secretary.save
-        format.html { redirect_to @secretary, notice: t("secretaries.created") }
-        format.json { render :show, status: :created, location: @secretary }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @secretary.errors, status: :unprocessable_entity }
-      end
+    if @secretary.save
+      redirect_to secretaries_path, notice: t("secretaries.created")
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /secretaries/1 or /secretaries/1.json
+  def edit
+    @secretary.build_address if @secretary.address.nil?
+  end
+
   def update
-    respond_to do |format|
-      if @secretary.update(secretary_params)
-        format.html { redirect_to @secretary, notice: t("secretaries.updated"), status: :see_other }
-        format.json { render :show, status: :ok, location: @secretary }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @secretary.errors, status: :unprocessable_entity }
-      end
+    if @secretary.update(secretary_params)
+      redirect_to secretaries_path, notice: t("secretaries.updated")
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /secretaries/1 or /secretaries/1.json
   def destroy
     @secretary.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to secretaries_path, notice: t("secretaries.destroyed"), status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to secretaries_path, notice: t("secretaries.destroyed"), status: :see_other
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_secretary
-      @secretary = Secretary.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def secretary_params
-      params.expect(secretary: [ :cnpj, :corporate_name, :email, :name, :prefecture_name, :status ])
-    end
+  def set_secretary
+    @secretary = Secretary.find(params[:id])
+  end
+
+  def require_tenant
+    return if Current.tenant.present?
+
+    redirect_to root_path, alert: t("errors.tenant_required")
+  end
+
+  def secretary_params
+    params.require(:secretary).permit(
+      :cnpj, :corporate_name, :email, :name, :prefecture_name, :status,
+      address_attributes: [ :id, :street, :number, :complement, :neighborhood, :city, :state, :zip_code, :country ]
+    )
+  end
 end

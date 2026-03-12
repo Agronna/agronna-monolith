@@ -5,10 +5,10 @@ class User < ApplicationRecord
 
   include BelongsToTenant
 
-  has_secure_password
-
-  has_one :owned_tenant, class_name: "Tenant", foreign_key: :owner_id, dependent: :nullify
   belongs_to :secretary, optional: true
+  has_one :owned_tenant, class_name: "Tenant", foreign_key: :owner_id, dependent: :nullify
+
+  has_secure_password
 
   enum :role, { user: 0, sub_admin: 1, admin: 2 }, prefix: true
 
