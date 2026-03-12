@@ -28,3 +28,17 @@ if Rails.env.development?
 
   tenant.update_column(:owner_id, admin.id) if tenant.owner_id.blank?
 end
+
+if Rails.env.development?
+  30.times do |i|
+    User.unscoped.find_or_create_by!(
+      email: "user#{i + 1}@agronna.local",
+      tenant: tenant
+    ) do |u|
+      u.name = "Usuário #{i + 1}"
+      u.password = "Senha@123"
+      u.role = :user
+      u.secretary = secretary
+    end
+  end
+end

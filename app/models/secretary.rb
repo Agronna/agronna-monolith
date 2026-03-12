@@ -1,4 +1,6 @@
 class Secretary < ApplicationRecord
+  audited
+
   include BelongsToTenant
 
   has_many :users, dependent: :restrict_with_error
