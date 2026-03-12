@@ -1,0 +1,11 @@
+# Schedule para sidekiq-cron (jobs recorrentes).
+# Formato: https://github.com/ondrejbartas/sidekiq-cron#job-options
+# Exemplo:
+#   report_daily:
+#     cron: "0 8 * * *"
+#     class: "ReportDailyJob"
+#     queue: default
+#
+# Deixe vazio até criar jobs agendados.
+
+{}

@@ -54,6 +54,14 @@ gem "pagy", "~> 43.3", ">= 43.3.2"
 
 gem "ransack", "~> 4.4", ">= 4.4.1"
 
+# Sidekiq
+gem "redis-namespace", "~> 1.11"
+gem "sidekiq", "~> 8.1", ">= 8.1.1"
+gem "sidekiq-history", "~> 1.0"
+
+# scheduling add-on for Sidekiq
+gem "sidekiq-cron", "~> 2.3", ">= 2.3.1"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

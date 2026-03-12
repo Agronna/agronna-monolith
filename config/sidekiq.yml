@@ -1,0 +1,11 @@
+# Configuração do processo Sidekiq (uso: bundle exec sidekiq -C config/sidekiq.yml).
+# Ajuste concurrency e queues conforme necessidade.
+
+:concurrency: 5
+
+:queues:
+  - [default, 5]
+  # - [mailers, 3]
+  # - [low, 1]
+
+:max_retries: 3
