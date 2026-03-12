@@ -3,7 +3,10 @@ class Secretary < ApplicationRecord
 
   include BelongsToTenant
 
+  has_one :address, as: :addressable, dependent: :destroy
   has_many :users, dependent: :restrict_with_error
+
+  accepts_nested_attributes_for :address, allow_destroy: true
   # has_many :agendamentos, dependent: :restrict_with_error
   # etc. — descomente ao criar as tabelas relacionadas
 
@@ -20,4 +23,13 @@ class Secretary < ApplicationRecord
   normalizes :email, with: ->(email) { email.to_s.strip.downcase }
   normalizes :name, with: ->(name) { name.to_s.strip }
   normalizes :prefecture_name, with: ->(prefecture_name) { prefecture_name.to_s.strip }
+
+  # Filtros: apenas name, cnpj, email e prefecture_name
+  def self.ransackable_attributes(auth_object = nil)
+    %w[name cnpj email prefecture_name]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[address tenant users]
+  end
 end

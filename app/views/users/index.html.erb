@@ -99,7 +99,7 @@
 
                   <td class="text-end">
                     <% if can? :update, user %>
-                      <%= link_to "Editar", edit_user_path(user), class: "btn btn-sm btn-outline-primary" %>
+                      <%= link_to "Editar", edit_user_path(user), class: "btn btn-sm btn-outline-primary", data: { turbo_frame: "_top" } %>
                     <% end %>
                   </td>
 
