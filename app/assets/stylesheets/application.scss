@@ -547,3 +547,241 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   text-decoration: underline;
   color: var(--color-forgot-link);
 }
+
+/* ========== Dashboard (home) ========== */
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard__header {
+  margin-bottom: 1.5rem;
+}
+
+.dashboard__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.dashboard__subtitle {
+  color: #6b7280;
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.dashboard__kpis {
+  margin-bottom: 0.5rem;
+}
+
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--color-border);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  height: 100%;
+}
+
+.kpi-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.kpi-card__icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpi-card--primary .kpi-card__icon {
+  background: rgba(0, 116, 167, 0.12);
+  color: var(--color-primary);
+}
+
+.kpi-card--secondary .kpi-card__icon {
+  background: rgba(246, 143, 58, 0.15);
+  color: var(--color-secondary);
+}
+
+.kpi-card--success .kpi-card__icon {
+  background: rgba(123, 187, 77, 0.15);
+  color: var(--color-text-secondary);
+}
+
+.kpi-card--neutral .kpi-card__icon {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.kpi-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.kpi-card__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.kpi-card__label {
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  height: 100%;
+}
+
+.dashboard-card__header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dashboard-card__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.dashboard-card__body {
+  padding: 1rem 1.25rem;
+}
+
+.quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quick-links__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.5rem;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.quick-links__item:hover {
+  background: #f9fafb;
+  color: var(--color-primary);
+}
+
+.quick-links__item--disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.quick-links__item--disabled:hover {
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+.quick-links__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.quick-links__icon--users {
+  background: rgba(0, 116, 167, 0.12);
+}
+
+.quick-links__icon--secretaries {
+  background: rgba(246, 143, 58, 0.15);
+}
+
+.quick-links__icon--orders {
+  background: rgba(123, 187, 77, 0.15);
+}
+
+.quick-links__icon--properties {
+  background: #e5e7eb;
+}
+
+.quick-links__text {
+  flex: 1;
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+
+.activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-list__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.activity-list__item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.activity-list__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}
+
+.activity-list__dot--primary {
+  background: var(--color-primary);
+}
+
+.activity-list__dot--secondary {
+  background: var(--color-secondary);
+}
+
+.activity-list__dot--success {
+  background: var(--color-text-secondary);
+}
+
+.activity-list__text {
+  display: block;
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+}
+
+.activity-list__meta {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.dashboard__footer-card {
+  background: linear-gradient(135deg, rgba(0, 116, 167, 0.06) 0%, rgba(123, 187, 77, 0.06) 100%);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+}
