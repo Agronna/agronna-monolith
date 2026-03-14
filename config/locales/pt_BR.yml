@@ -45,6 +45,14 @@ pt-BR:
         password_reset_token: Redefinição de Senha do Usuário
         password: Senha do Usuário
 
+      producer:
+        name: Nome
+        email: E-mail
+        cpf: CPF
+        phone: Telefone
+        birth_date: Data de Nascimento
+        status: Status
+
     errors:
       # format: "%{attribute} %{message}"
 
@@ -105,6 +113,10 @@ pt-BR:
     created: "Secretária criada com sucesso."
     updated: "Secretária atualizada com sucesso."
     destroyed: "Secretária excluída com sucesso."
+  producers:
+    created: "Produtor cadastrado com sucesso."
+    updated: "Produtor atualizado com sucesso."
+    destroyed: "Produtor excluído com sucesso."
   views:
     pagination:
       previous: "&laquo; Anterior"
