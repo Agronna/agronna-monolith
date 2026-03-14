@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_14_172202) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_14_184241) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -136,6 +136,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_172202) do
     t.index ["tenant_id"], name: "index_secretaries_on_tenant_id"
   end
 
+  create_table "service_providers", force: :cascade do |t|
+    t.string "cnpj"
+    t.string "corporate_name"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "name"
+    t.bigint "secretary_id", null: false
+    t.string "service_type"
+    t.integer "status"
+    t.string "telephone"
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["secretary_id"], name: "index_service_providers_on_secretary_id"
+    t.index ["tenant_id"], name: "index_service_providers_on_tenant_id"
+  end
+
   create_table "tenants", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -168,6 +184,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_172202) do
   add_foreign_key "properties", "producers"
   add_foreign_key "properties", "tenants"
   add_foreign_key "secretaries", "tenants"
+  add_foreign_key "service_providers", "secretaries"
+  add_foreign_key "service_providers", "tenants"
   add_foreign_key "tenants", "users", column: "owner_id"
   add_foreign_key "users", "secretaries"
   add_foreign_key "users", "tenants"

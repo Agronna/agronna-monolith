@@ -71,6 +71,16 @@ pt-BR:
         status: Status
         producer: Produtor
 
+      service_provider:
+        name: Nome Fantasia
+        corporate_name: Razão Social
+        cnpj: CNPJ
+        email: E-mail
+        telephone: Telefone
+        service_type: Tipo de Serviço
+        status: Status
+        secretary: Secretaria
+
     errors:
       # format: "%{attribute} %{message}"
 
@@ -143,6 +153,10 @@ pt-BR:
     created: "Propriedade cadastrada com sucesso."
     updated: "Propriedade atualizada com sucesso."
     destroyed: "Propriedade excluída com sucesso."
+  service_providers:
+    created: "Prestador de serviço cadastrado com sucesso."
+    updated: "Prestador de serviço atualizado com sucesso."
+    destroyed: "Prestador de serviço excluído com sucesso."
   views:
     pagination:
       previous: "&laquo; Anterior"

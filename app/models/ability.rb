@@ -13,6 +13,7 @@ class Ability
       can :manage, Producer
       can :manage, Machine
       can :manage, Property
+      can :manage, ServiceProvider
 
     elsif user.sub_admin?
       can %i[read update], User, id: user.id
@@ -20,6 +21,7 @@ class Ability
       can %i[read create update], Producer
       can %i[read create update], Machine
       can %i[read create update], Property
+      can %i[read create update], ServiceProvider
 
     else
       can %i[read update], User, id: user.id
@@ -27,6 +29,7 @@ class Ability
       can :read, Producer
       can :read, Machine
       can :read, Property
+      can :read, ServiceProvider
     end
   end
 end

@@ -1,0 +1,115 @@
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Prestadores de Serviços</h2>
+
+    <% if can? :create, ServiceProvider %>
+      <%= link_to "Novo Prestador", new_service_provider_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <%= search_form_for @q, url: service_providers_path, method: :get, html: { class: "mb-4", data: { turbo_frame: "service_providers_list" } } do |f| %>
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h6 class="card-title mb-3">Filtrar</h6>
+        <div class="row g-2 g-md-3 align-items-end">
+          <div class="col-12 col-sm-6 col-lg-2">
+            <%= f.label :name_cont, "Nome", class: "form-label small text-muted" %>
+            <%= f.search_field :name_cont, class: "form-control form-control-sm", placeholder: "Contém..." %>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-2">
+            <%= f.label :cnpj_cont, "CNPJ", class: "form-label small text-muted" %>
+            <%= f.search_field :cnpj_cont, class: "form-control form-control-sm", placeholder: "Contém..." %>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-2">
+            <%= f.label :email_cont, "E-mail", class: "form-label small text-muted" %>
+            <%= f.search_field :email_cont, class: "form-control form-control-sm", placeholder: "Contém..." %>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-2">
+            <%= f.label :service_type_cont, "Tipo de Serviço", class: "form-label small text-muted" %>
+            <%= f.search_field :service_type_cont, class: "form-control form-control-sm", placeholder: "Contém..." %>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-2">
+            <%= f.label :telephone_cont, "Telefone", class: "form-label small text-muted" %>
+            <%= f.search_field :telephone_cont, class: "form-control form-control-sm", placeholder: "Contém..." %>
+          </div>
+          <div class="col-12 col-lg-2 d-flex align-items-end gap-1">
+            <%= f.submit "Filtrar", class: "btn btn-primary btn-sm" %>
+            <%= link_to "Limpar", service_providers_path, class: "btn btn-outline-secondary btn-sm", data: { turbo_frame: "service_providers_list" } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= turbo_frame_tag "service_providers_list" do %>
+    <div class="card shadow-sm">
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <p class="text-muted small mb-0">
+            <% if @pagy.present? %>
+              <%== @pagy.info_tag(item_name: "prestador") %>
+            <% else %>
+              <%= @service_providers.size %> prestador(es)
+            <% end %>
+          </p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle">
+
+            <thead class="table-light">
+              <tr>
+                <th>Nome</th>
+                <th>Razão Social</th>
+                <th>CNPJ</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Tipo de Serviço</th>
+                <th>Secretaria</th>
+                <th>Status</th>
+                <th class="text-end">Ações</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% @service_providers.each do |service_provider| %>
+                <tr>
+                  <td><strong><%= service_provider.name %></strong></td>
+                  <td><%= service_provider.corporate_name %></td>
+                  <td><%= service_provider.cnpj %></td>
+                  <td><%= service_provider.email.presence || "—" %></td>
+                  <td><%= service_provider.telephone.presence || "—" %></td>
+                  <td><%= service_provider.service_type %></td>
+                  <td><%= service_provider.secretary&.name || "—" %></td>
+                  <td>
+                    <span class="badge <%= service_provider.status_active? ? 'bg-success' : 'bg-secondary' %>">
+                      <%= service_provider.status_active? ? "Ativo" : "Inativo" %>
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <% if can? :update, service_provider %>
+                      <%= link_to "Editar", edit_service_provider_path(service_provider), class: "btn btn-sm btn-outline-primary", data: { turbo_frame: "_top" } %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-center mt-3">
+          <% if @pagy.present? && @pagy.pages > 1 %>
+            <nav aria-label="Navegação de páginas" class="pagy-bootstrap-nav">
+              <%== @pagy.series_nav("bootstrap") %>
+            </nav>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  <% end %>
+
+</div>
