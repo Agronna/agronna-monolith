@@ -60,7 +60,7 @@
         <% end %>
       </li>
       <li>
-        <%= link_to "#", class: "sidebar-nav__link" do %>
+        <%= link_to properties_path, class: "sidebar-nav__link #{'sidebar-nav__link--active' if controller_name == 'properties'}" do %>
           <%= icon_svg(:land, class: "sidebar-icon") %>
           <span>Propriedades</span>
         <% end %>

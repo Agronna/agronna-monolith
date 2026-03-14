@@ -62,6 +62,15 @@ pt-BR:
         status: Status
         secretary: Secretaria
 
+      property:
+        name: Nome
+        incra: INCRA
+        registration: Matrícula
+        activity: Atividade
+        localization: Localização
+        status: Status
+        producer: Produtor
+
     errors:
       # format: "%{attribute} %{message}"
 
@@ -130,6 +139,10 @@ pt-BR:
     created: "Maquinário cadastrado com sucesso."
     updated: "Maquinário atualizado com sucesso."
     destroyed: "Maquinário excluído com sucesso."
+  properties:
+    created: "Propriedade cadastrada com sucesso."
+    updated: "Propriedade atualizada com sucesso."
+    destroyed: "Propriedade excluída com sucesso."
   views:
     pagination:
       previous: "&laquo; Anterior"
