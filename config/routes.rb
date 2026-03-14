@@ -11,5 +11,6 @@ Rails.application.routes.draw do
 
   resources :secretaries, path: "/secretarias", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
   resources :producers, path: "/produtores", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
+  resources :machines, path: "/maquinarios", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
   resources :users, path: "/usuarios", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
 end

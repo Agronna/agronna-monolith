@@ -42,7 +42,7 @@
         <% end %>
       </li>
       <li>
-        <%= link_to "#", class: "sidebar-nav__link" do %>
+        <%= link_to machines_path, class: "sidebar-nav__link #{'sidebar-nav__link--active' if controller_name == 'machines'}" do %>
           <%= icon_svg(:tractor, class: "sidebar-icon") %>
           <span>Maquinários</span>
         <% end %>
