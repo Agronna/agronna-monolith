@@ -54,7 +54,7 @@
         <% end %>
       </li>
       <li>
-        <%= link_to "#", class: "sidebar-nav__link" do %>
+        <%= link_to producers_path, class: "sidebar-nav__link #{'sidebar-nav__link--active' if controller_name == 'producers'}" do %>
           <%= icon_svg(:user, class: "sidebar-icon") %>
           <span>Produtores</span>
         <% end %>

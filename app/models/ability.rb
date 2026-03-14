@@ -10,14 +10,17 @@ class Ability
     if user.account_owner? || user.admin?
       can :manage, User
       can :manage, Secretary
+      can :manage, Producer
 
     elsif user.sub_admin?
       can %i[read update], User, id: user.id
       can %i[read create update], Secretary
+      can %i[read create update], Producer
 
     else
       can %i[read update], User, id: user.id
       can :read, Secretary
+      can :read, Producer
     end
   end
 end
