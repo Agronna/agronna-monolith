@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class SecretariesController < ApplicationController
-  before_action :require_tenant
   before_action :set_secretary, only: %i[ edit update destroy ]
   load_and_authorize_resource except: [ :create, :new ]
 
@@ -50,12 +49,6 @@ class SecretariesController < ApplicationController
 
   def set_secretary
     @secretary = Secretary.find(params[:id])
-  end
-
-  def require_tenant
-    return if Current.tenant.present?
-
-    redirect_to root_path, alert: t("errors.tenant_required")
   end
 
   def secretary_params

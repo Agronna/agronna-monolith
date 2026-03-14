@@ -4,7 +4,6 @@ class SessionsController < ApplicationController
   layout "guest", only: [ :new, :create ]
   skip_before_action :require_login, only: [ :new, :create ]
   skip_before_action :check_session_expiry, only: [ :new, :create ]
-  before_action :require_tenant, only: [ :new, :create ]
 
   def new
     @user = User.new
@@ -26,13 +25,5 @@ class SessionsController < ApplicationController
   def destroy
     reset_session
     redirect_to root_path, notice: t("sessions.signed_out")
-  end
-
-  private
-
-  def require_tenant
-    return if Current.tenant.present?
-
-    redirect_to root_path, alert: t("errors.tenant_required")
   end
 end

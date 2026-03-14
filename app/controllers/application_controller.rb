@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
 
   before_action :set_current_tenant
+  before_action :require_tenant
   before_action :set_current_user
   before_action :check_session_expiry
   before_action :require_login
@@ -19,6 +20,12 @@ class ApplicationController < ActionController::Base
   def set_current_tenant
     subdomain = request.subdomain.presence || request.env["HTTP_X_TENANT"]
     Current.tenant = Tenant.find_by_subdomain(subdomain) if subdomain.present?
+  end
+
+  def require_tenant
+    return if Current.tenant.present?
+
+    redirect_to tenant_required_path
   end
 
   def set_current_user
@@ -40,8 +47,6 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login
-    # Sem tenant: não exige login (evita loop); a tela pode exibir aviso para acessar com subdomínio
-    return if Current.tenant.blank?
     return if current_user.present?
 
     redirect_to new_session_path, alert: t("sessions.login_required")

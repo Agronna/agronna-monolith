@@ -1,0 +1,32 @@
+<div class="tenant-error">
+  <div class="tenant-error__card">
+    <div class="tenant-error__icon">
+      <%= icon_svg(:building, width: 64, height: 64, class: "text-muted") %>
+    </div>
+
+    <h1 class="tenant-error__title">Acesso não identificado</h1>
+
+    <div class="tenant-error__message">
+      <p>
+        Não foi possível identificar a <strong>organização</strong> associada a este acesso.
+      </p>
+      <p>
+        Para acessar o sistema, você precisa utilizar o endereço fornecido pela sua organização,
+        que normalmente segue o formato:
+      </p>
+      <p class="tenant-error__example">
+        <code>suaorganizacao.agronna.com.br</code>
+      </p>
+      <p class="text-muted small">
+        Se você não possui um endereço de acesso ou está com dificuldades,
+        entre em contato com o administrador da sua organização ou com o suporte técnico.
+      </p>
+    </div>
+
+    <div class="tenant-error__footer">
+      <a href="mailto:suporte@agronna.com.br" class="btn btn-outline-primary">
+        Falar com suporte
+      </a>
+    </div>
+  </div>
+</div>

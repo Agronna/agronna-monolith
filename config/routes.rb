@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root "home#index"
 
+  get "acesso-invalido", to: "errors#tenant_required", as: :tenant_required
+
   post "home/submit", to: "home#submit"
 
   get "login", to: "sessions#new", as: :new_session

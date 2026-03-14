@@ -3,7 +3,6 @@
 # Apenas admin pode cadastrar sub-admins (usuários da secretaria).
 # Sub-admin e user podem apenas editar o próprio perfil.
 class UsersController < ApplicationController
-  before_action :require_tenant
   load_and_authorize_resource except: [ :create, :new ]
 
   def index
@@ -44,12 +43,6 @@ class UsersController < ApplicationController
   end
 
   private
-
-  def require_tenant
-    return if Current.tenant.present?
-
-    redirect_to root_path, alert: t("errors.tenant_required")
-  end
 
   def user_params
     p = params.require(:user).permit(:name, :email, :password, :password_confirmation, :role, :secretary_id)
