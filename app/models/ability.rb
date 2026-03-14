@@ -12,18 +12,21 @@ class Ability
       can :manage, Secretary
       can :manage, Producer
       can :manage, Machine
+      can :manage, Property
 
     elsif user.sub_admin?
       can %i[read update], User, id: user.id
       can %i[read create update], Secretary
       can %i[read create update], Producer
       can %i[read create update], Machine
+      can %i[read create update], Property
 
     else
       can %i[read update], User, id: user.id
       can :read, Secretary
       can :read, Producer
       can :read, Machine
+      can :read, Property
     end
   end
 end

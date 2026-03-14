@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_14_165038) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_14_172202) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -108,6 +108,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_165038) do
     t.index ["tenant_id"], name: "index_producers_on_tenant_id"
   end
 
+  create_table "properties", force: :cascade do |t|
+    t.text "activity", null: false
+    t.datetime "created_at", null: false
+    t.string "incra"
+    t.string "localization"
+    t.string "name", null: false
+    t.bigint "producer_id", null: false
+    t.string "registration"
+    t.integer "status", null: false
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["producer_id"], name: "index_properties_on_producer_id"
+    t.index ["tenant_id"], name: "index_properties_on_tenant_id"
+  end
+
   create_table "secretaries", force: :cascade do |t|
     t.string "cnpj", null: false
     t.string "corporate_name", null: false
@@ -150,6 +165,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_165038) do
   add_foreign_key "machines", "secretaries"
   add_foreign_key "machines", "tenants"
   add_foreign_key "producers", "tenants"
+  add_foreign_key "properties", "producers"
+  add_foreign_key "properties", "tenants"
   add_foreign_key "secretaries", "tenants"
   add_foreign_key "tenants", "users", column: "owner_id"
   add_foreign_key "users", "secretaries"

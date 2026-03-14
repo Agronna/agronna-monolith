@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Tenant < ApplicationRecord
   belongs_to :owner, class_name: "User", optional: true
   has_many :users, dependent: :restrict_with_error
