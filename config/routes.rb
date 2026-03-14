@@ -15,4 +15,12 @@ Rails.application.routes.draw do
   resources :properties, path: "/propriedades", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
   resources :service_providers, path: "/prestadores", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
   resources :users, path: "/usuarios", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
+
+  resources :service_orders, path: "/ordens-servico", path_names: { new: "cadastrar", edit: "editar" } do
+    member do
+      patch :start, path: "iniciar"
+      patch :complete, path: "finalizar"
+      patch :cancel, path: "cancelar"
+    end
+  end
 end

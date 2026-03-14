@@ -5,6 +5,9 @@ class Machine < ApplicationRecord
 
   belongs_to :secretary
 
+  has_many :service_order_machines, dependent: :restrict_with_error
+  has_many :service_orders, through: :service_order_machines
+
   validates :name, presence: true
   validates :chassis, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
   validates :plate, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }

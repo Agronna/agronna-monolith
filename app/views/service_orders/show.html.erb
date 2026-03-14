@@ -1,0 +1,209 @@
+<div class="container-fluid py-4">
+  <div class="mb-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><%= link_to "Ordens de Serviço", service_orders_path %></li>
+        <li class="breadcrumb-item active" aria-current="page"><%= @service_order.code %></li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <span class="badge <%= @service_order.status_badge_class %> mb-2">
+                <%= t("service_orders.statuses.#{@service_order.status}") %>
+              </span>
+              <span class="badge <%= @service_order.priority_badge_class %> mb-2 ms-1">
+                <%= t("service_orders.priorities.#{@service_order.priority}") %>
+              </span>
+              <% if @service_order.overdue? %>
+                <span class="badge bg-danger mb-2 ms-1">Atrasada</span>
+              <% end %>
+              <h2 class="h4 mb-1"><%= @service_order.title %></h2>
+              <p class="text-muted mb-0 font-monospace"><%= @service_order.code %></p>
+            </div>
+            <div class="btn-group">
+              <% if can?(:update, @service_order) %>
+                <%= link_to edit_service_order_path(@service_order), class: "btn btn-outline-primary" do %>
+                  <%= icon_svg(:wrench, width: 18, height: 18) %> Editar
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+
+          <% if @service_order.description.present? %>
+            <div class="mb-3">
+              <h6 class="text-muted small">Descrição</h6>
+              <p class="mb-0"><%= simple_format(@service_order.description) %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:tractor, width: 18, height: 18, class: "me-2") %>
+            Equipamentos Envolvidos
+            <span class="badge bg-secondary ms-2"><%= @service_order.machines.count %></span>
+          </h6>
+        </div>
+        <% if @service_order.machines.any? %>
+          <ul class="list-group list-group-flush">
+            <% @service_order.machines.each do |machine| %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-medium"><%= machine.name %></span>
+                  <br>
+                  <small class="text-muted"><%= machine.plate %> - <%= machine.function %></small>
+                </div>
+                <span class="badge bg-light text-dark"><%= machine.status_active? ? "Ativo" : "Inativo" %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="card-body text-center text-muted">
+            <p class="mb-0">Nenhum equipamento vinculado.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @service_order.observations.present? %>
+        <div class="card shadow-sm">
+          <div class="card-header bg-white">
+            <h6 class="mb-0">
+              <%= icon_svg(:receipt, width: 18, height: 18, class: "me-2") %>
+              Observações
+            </h6>
+          </div>
+          <div class="card-body">
+            <%= simple_format(@service_order.observations) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:calendar, width: 18, height: 18, class: "me-2") %>
+            Datas
+          </h6>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Prazo</span>
+            <span class="<%= @service_order.overdue? ? 'text-danger fw-bold' : '' %>">
+              <%= l(@service_order.deadline, format: :long) %>
+            </span>
+          </li>
+          <% if @service_order.scheduled_at.present? %>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="text-muted">Agendado para</span>
+              <span><%= l(@service_order.scheduled_at, format: :short) %></span>
+            </li>
+          <% end %>
+          <% if @service_order.started_at.present? %>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="text-muted">Iniciado em</span>
+              <span><%= l(@service_order.started_at, format: :short) %></span>
+            </li>
+          <% end %>
+          <% if @service_order.completed_at.present? %>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="text-muted">Finalizado em</span>
+              <span class="text-success"><%= l(@service_order.completed_at, format: :short) %></span>
+            </li>
+          <% end %>
+          <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Criado em</span>
+            <span><%= l(@service_order.created_at, format: :short) %></span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:building, width: 18, height: 18, class: "me-2") %>
+            Vinculações
+          </h6>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <small class="text-muted d-block">Secretaria</small>
+            <span class="fw-medium"><%= @service_order.secretary.name %></span>
+          </li>
+          <% if @service_order.producer.present? %>
+            <li class="list-group-item">
+              <small class="text-muted d-block">Produtor</small>
+              <span><%= @service_order.producer.name %></span>
+            </li>
+          <% end %>
+          <% if @service_order.property.present? %>
+            <li class="list-group-item">
+              <small class="text-muted d-block">Propriedade</small>
+              <span><%= @service_order.property.name %></span>
+            </li>
+          <% end %>
+          <% if @service_order.service_provider.present? %>
+            <li class="list-group-item">
+              <small class="text-muted d-block">Prestador de Serviço</small>
+              <span><%= @service_order.service_provider.name %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:users, width: 18, height: 18, class: "me-2") %>
+            Responsáveis
+          </h6>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <small class="text-muted d-block">Responsável pela execução</small>
+            <span class="<%= @service_order.assigned_to.present? ? 'fw-medium' : 'text-muted' %>">
+              <%= @service_order.assigned_to&.name || "Não atribuído" %>
+            </span>
+          </li>
+          <% if @service_order.requested_by.present? %>
+            <li class="list-group-item">
+              <small class="text-muted d-block">Solicitado por</small>
+              <span><%= @service_order.requested_by.name %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <% if @service_order.status_pending? || @service_order.status_scheduled? %>
+              <% if can?(:update, @service_order) %>
+                <%= button_to "Iniciar Ordem de Serviço", start_service_order_path(@service_order), method: :patch, class: "btn btn-success", data: { turbo_confirm: "Deseja iniciar esta ordem de serviço?" } %>
+              <% end %>
+            <% elsif @service_order.status_in_progress? %>
+              <% if can?(:update, @service_order) %>
+                <%= button_to "Finalizar Ordem de Serviço", complete_service_order_path(@service_order), method: :patch, class: "btn btn-success", data: { turbo_confirm: "Deseja finalizar esta ordem de serviço?" } %>
+              <% end %>
+            <% end %>
+
+            <% if can?(:update, @service_order) && !@service_order.status_completed? && !@service_order.status_cancelled? %>
+              <%= button_to "Cancelar Ordem de Serviço", cancel_service_order_path(@service_order), method: :patch, class: "btn btn-outline-danger", data: { turbo_confirm: "Deseja cancelar esta ordem de serviço?" } %>
+            <% end %>
+
+            <%= link_to "Voltar para Lista", service_orders_path, class: "btn btn-outline-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

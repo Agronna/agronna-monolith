@@ -5,10 +5,11 @@ class Secretary < ApplicationRecord
 
   has_one :address, as: :addressable, dependent: :destroy
   has_many :users, dependent: :restrict_with_error
+  has_many :machines, dependent: :restrict_with_error
+  has_many :service_orders, dependent: :restrict_with_error
+  has_many :service_providers, dependent: :restrict_with_error
 
   accepts_nested_attributes_for :address, allow_destroy: true
-  # has_many :agendamentos, dependent: :restrict_with_error
-  # etc. — descomente ao criar as tabelas relacionadas
 
   validates :cnpj, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }
   validates :corporate_name, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }

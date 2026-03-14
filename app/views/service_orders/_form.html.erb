@@ -1,0 +1,175 @@
+<%= form_with model: @service_order, local: true, class: "needs-validation" do |f| %>
+  <% if @service_order.errors.any? %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Atenção!</strong> <%= pluralize(@service_order.errors.count, "erro encontrado", "erros encontrados") %>:
+      <ul class="mb-0 mt-2">
+        <% @service_order.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+  <% end %>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:clipboard, width: 18, height: 18, class: "me-2") %>
+            Informações da Ordem de Serviço
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <%= f.label :title, t("activerecord.attributes.service_order.title"), class: "form-label" %>
+              <%= f.text_field :title, class: "form-control", placeholder: "Ex: Manutenção preventiva do trator", required: true %>
+            </div>
+
+            <div class="col-12">
+              <%= f.label :description, t("activerecord.attributes.service_order.description"), class: "form-label" %>
+              <%= f.text_area :description, class: "form-control", rows: 3, placeholder: "Descreva os detalhes do serviço a ser executado..." %>
+            </div>
+
+            <div class="col-md-6">
+              <%= f.label :deadline, t("activerecord.attributes.service_order.deadline"), class: "form-label" %>
+              <%= f.date_field :deadline, class: "form-control", required: true, min: Date.current %>
+            </div>
+
+            <div class="col-md-6">
+              <%= f.label :scheduled_at, t("activerecord.attributes.service_order.scheduled_at"), class: "form-label" %>
+              <%= f.datetime_local_field :scheduled_at, class: "form-control" %>
+            </div>
+
+            <div class="col-md-6">
+              <%= f.label :priority, t("activerecord.attributes.service_order.priority"), class: "form-label" %>
+              <%= f.select :priority, ServiceOrder.priorities.keys.map { |p| [t("service_orders.priorities.#{p}"), p] }, {}, class: "form-select" %>
+            </div>
+
+            <div class="col-md-6">
+              <%= f.label :status, t("activerecord.attributes.service_order.status"), class: "form-label" %>
+              <%= f.select :status, ServiceOrder.statuses.keys.map { |s| [t("service_orders.statuses.#{s}"), s] }, {}, class: "form-select" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Equipamentos -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">
+            <%= icon_svg(:tractor, width: 18, height: 18, class: "me-2") %>
+            Equipamentos Envolvidos
+          </h6>
+        </div>
+        <div class="card-body">
+          <p class="text-muted small mb-3">Selecione os equipamentos que serão utilizados nesta ordem de serviço.</p>
+
+          <% if @machines.any? %>
+            <div class="row g-2">
+              <% @machines.each do |machine| %>
+                <div class="col-md-6 col-lg-4">
+                  <div class="form-check">
+                    <%= check_box_tag "service_order[machine_ids][]", machine.id,
+                        @service_order.machine_ids.include?(machine.id),
+                        id: "machine_#{machine.id}",
+                        class: "form-check-input" %>
+                    <label class="form-check-label" for="machine_<%= machine.id %>">
+                      <span class="fw-medium"><%= machine.name %></span>
+                      <br>
+                      <small class="text-muted"><%= machine.plate %> - <%= machine.function %></small>
+                    </label>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">Nenhum equipamento disponível.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:receipt, width: 18, height: 18, class: "me-2") %>
+            Observações
+          </h6>
+        </div>
+        <div class="card-body">
+          <%= f.text_area :observations, class: "form-control", rows: 4, placeholder: "Observações adicionais, notas internas, instruções especiais..." %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:building, width: 18, height: 18, class: "me-2") %>
+            Vinculações
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :secretary_id, t("activerecord.attributes.service_order.secretary"), class: "form-label" %>
+            <%= f.collection_select :secretary_id, @secretaries, :id, :name, { prompt: "Selecione..." }, { class: "form-select", required: true } %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :producer_id, t("activerecord.attributes.service_order.producer"), class: "form-label" %>
+            <%= f.collection_select :producer_id, @producers, :id, :name, { include_blank: "Nenhum produtor" }, { class: "form-select" } %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :property_id, t("activerecord.attributes.service_order.property"), class: "form-label" %>
+            <%= f.collection_select :property_id, @properties, :id, :name, { include_blank: "Nenhuma propriedade" }, { class: "form-select" } %>
+          </div>
+
+          <div class="mb-0">
+            <%= f.label :service_provider_id, t("activerecord.attributes.service_order.service_provider"), class: "form-label" %>
+            <%= f.collection_select :service_provider_id, @service_providers, :id, :name, { include_blank: "Nenhum prestador" }, { class: "form-select" } %>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:users, width: 18, height: 18, class: "me-2") %>
+            Responsáveis
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :assigned_to_id, t("activerecord.attributes.service_order.assigned_to"), class: "form-label" %>
+            <%= f.collection_select :assigned_to_id, @users, :id, :name, { include_blank: "Não atribuído" }, { class: "form-select" } %>
+            <small class="text-muted">Usuário responsável pela execução</small>
+          </div>
+
+          <% if @service_order.requested_by.present? %>
+            <div class="mb-0">
+              <label class="form-label">Solicitado por</label>
+              <p class="form-control-plaintext"><%= @service_order.requested_by.name %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <% if @service_order.persisted? %>
+        <div class="card shadow-sm mb-4">
+          <div class="card-body text-center">
+            <small class="text-muted d-block mb-1">Código da Ordem</small>
+            <span class="h4 font-monospace"><%= @service_order.code %></span>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="d-grid gap-2">
+        <%= f.submit @service_order.persisted? ? "Atualizar Ordem de Serviço" : "Criar Ordem de Serviço", class: "btn btn-primary btn-lg" %>
+        <%= link_to "Cancelar", service_orders_path, class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+<% end %>
