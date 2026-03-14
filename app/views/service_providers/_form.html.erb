@@ -1,0 +1,117 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+
+          <h3 class="card-title mb-4 text-center">
+            <%= @service_provider.new_record? ? "Novo Prestador de Serviço" : "Editar Prestador de Serviço" %>
+          </h3>
+
+          <% if @service_provider.errors.any? %>
+            <div class="alert alert-danger">
+              <strong><%= pluralize(@service_provider.errors.count, "erro") %> impediram de salvar:</strong>
+              <ul class="mb-0">
+                <% @service_provider.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%= form_with model: @service_provider, local: true do |f| %>
+
+            <h6 class="text-muted border-bottom pb-2 mb-3">Dados do prestador</h6>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <%= f.label :name, "Nome Fantasia", class: "form-label" %>
+                <%= f.text_field :name, class: "form-control", placeholder: "Nome fantasia", required: true %>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :corporate_name, "Razão Social", class: "form-label" %>
+                <%= f.text_field :corporate_name, class: "form-control", placeholder: "Razão social", required: true %>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :cnpj, "CNPJ", class: "form-label" %>
+                <%= f.text_field :cnpj, class: "form-control", placeholder: "00.000.000/0000-00", required: true %>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :service_type, "Tipo de Serviço", class: "form-label" %>
+                <%= f.text_field :service_type, class: "form-control", placeholder: "Ex: Manutenção, Transporte", required: true %>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :email, "E-mail", class: "form-label" %>
+                <%= f.email_field :email, class: "form-control", placeholder: "email@exemplo.com" %>
+              </div>
+              <div class="col-md-3">
+                <%= f.label :telephone, "Telefone", class: "form-label" %>
+                <%= f.text_field :telephone, class: "form-control", placeholder: "(00) 00000-0000" %>
+              </div>
+              <div class="col-md-3">
+                <%= f.label :status, "Status", class: "form-label" %>
+                <%= f.select :status,
+                  ServiceProvider.statuses.keys.map { |s| [s == "active" ? "Ativo" : "Inativo", s] },
+                  {},
+                  class: "form-select", required: true %>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :secretary_id, "Secretaria", class: "form-label" %>
+                <%= f.collection_select :secretary_id, @secretaries, :id, :name,
+                  { prompt: "Selecione a secretaria" },
+                  class: "form-select", required: true %>
+              </div>
+            </div>
+
+            <h6 class="text-muted border-bottom pb-2 mb-3 mt-4">Endereço</h6>
+
+            <%= f.fields_for :address do |addr| %>
+              <div class="row g-3">
+                <div class="col-12">
+                  <%= addr.label :street, "Logradouro", class: "form-label" %>
+                  <%= addr.text_field :street, class: "form-control", placeholder: "Rua, avenida, etc." %>
+                </div>
+                <div class="col-md-4">
+                  <%= addr.label :number, "Número", class: "form-label" %>
+                  <%= addr.text_field :number, class: "form-control", placeholder: "Nº" %>
+                </div>
+                <div class="col-md-4">
+                  <%= addr.label :complement, "Complemento", class: "form-label" %>
+                  <%= addr.text_field :complement, class: "form-control", placeholder: "Sala, bloco, etc." %>
+                </div>
+                <div class="col-md-4">
+                  <%= addr.label :neighborhood, "Bairro", class: "form-label" %>
+                  <%= addr.text_field :neighborhood, class: "form-control", placeholder: "Bairro" %>
+                </div>
+                <div class="col-md-5">
+                  <%= addr.label :city, "Cidade", class: "form-label" %>
+                  <%= addr.text_field :city, class: "form-control", placeholder: "Cidade" %>
+                </div>
+                <div class="col-md-2">
+                  <%= addr.label :state, "UF", class: "form-label" %>
+                  <%= addr.text_field :state, class: "form-control", placeholder: "UF", maxlength: 2 %>
+                </div>
+                <div class="col-md-3">
+                  <%= addr.label :zip_code, "CEP", class: "form-label" %>
+                  <%= addr.text_field :zip_code, class: "form-control", placeholder: "00000-000" %>
+                </div>
+                <div class="col-md-2">
+                  <%= addr.label :country, "País", class: "form-label" %>
+                  <%= addr.text_field :country, class: "form-control", placeholder: "BR" %>
+                </div>
+              </div>
+            <% end %>
+
+            <div class="d-grid mt-4">
+              <%= f.submit (@service_provider.new_record? ? "Criar Prestador" : "Salvar Alterações"), class: "btn btn-primary" %>
+            </div>
+
+          <% end %>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
