@@ -53,6 +53,15 @@ pt-BR:
         birth_date: Data de Nascimento
         status: Status
 
+      machine:
+        name: Nome
+        chassis: Chassi
+        plate: Placa
+        manufacturing_year: Ano de Fabricação
+        function: Função
+        status: Status
+        secretary: Secretaria
+
     errors:
       # format: "%{attribute} %{message}"
 
@@ -117,6 +126,10 @@ pt-BR:
     created: "Produtor cadastrado com sucesso."
     updated: "Produtor atualizado com sucesso."
     destroyed: "Produtor excluído com sucesso."
+  machines:
+    created: "Maquinário cadastrado com sucesso."
+    updated: "Maquinário atualizado com sucesso."
+    destroyed: "Maquinário excluído com sucesso."
   views:
     pagination:
       previous: "&laquo; Anterior"
