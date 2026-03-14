@@ -81,6 +81,30 @@ pt-BR:
         status: Status
         secretary: Secretaria
 
+      service_order:
+        code: Código
+        title: Título
+        description: Descrição
+        deadline: Prazo de Execução
+        scheduled_at: Agendado para
+        started_at: Iniciado em
+        completed_at: Finalizado em
+        status: Status
+        priority: Prioridade
+        observations: Observações
+        secretary: Secretaria
+        property: Propriedade
+        producer: Produtor
+        service_provider: Prestador de Serviço
+        assigned_to: Responsável
+        requested_by: Solicitado por
+        machines: Equipamentos
+
+      service_order_machine:
+        machine: Equipamento
+        hours_used: Horas Utilizadas
+        notes: Observações
+
     errors:
       # format: "%{attribute} %{message}"
 
@@ -157,6 +181,28 @@ pt-BR:
     created: "Prestador de serviço cadastrado com sucesso."
     updated: "Prestador de serviço atualizado com sucesso."
     destroyed: "Prestador de serviço excluído com sucesso."
+
+  service_orders:
+    created: "Ordem de serviço criada com sucesso."
+    updated: "Ordem de serviço atualizada com sucesso."
+    destroyed: "Ordem de serviço excluída com sucesso."
+    started: "Ordem de serviço iniciada com sucesso."
+    completed: "Ordem de serviço finalizada com sucesso."
+    cancelled: "Ordem de serviço cancelada."
+    cannot_start: "Não foi possível iniciar a ordem de serviço."
+    cannot_complete: "Não foi possível finalizar a ordem de serviço."
+    cannot_cancel: "Não foi possível cancelar a ordem de serviço."
+    statuses:
+      pending: "Pendente"
+      scheduled: "Agendada"
+      in_progress: "Em Andamento"
+      completed: "Finalizada"
+      cancelled: "Cancelada"
+    priorities:
+      low: "Baixa"
+      normal: "Normal"
+      high: "Alta"
+      urgent: "Urgente"
   views:
     pagination:
       previous: "&laquo; Anterior"

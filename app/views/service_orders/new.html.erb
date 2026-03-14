@@ -1,0 +1,14 @@
+<div class="container-fluid py-4">
+  <div class="mb-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><%= link_to "Ordens de Serviço", service_orders_path %></li>
+        <li class="breadcrumb-item active" aria-current="page">Nova</li>
+      </ol>
+    </nav>
+    <h1 class="h3 mb-1">Nova Ordem de Serviço</h1>
+    <p class="text-muted mb-0">Preencha as informações para criar uma nova ordem de serviço</p>
+  </div>
+
+  <%= render "form" %>
+</div>

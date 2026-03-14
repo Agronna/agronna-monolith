@@ -36,9 +36,9 @@
         <% end %>
       </li>
       <li>
-        <%= link_to "#", class: "sidebar-nav__link" do %>
+        <%= link_to service_orders_path, class: "sidebar-nav__link #{'sidebar-nav__link--active' if controller_name == 'service_orders'}" do %>
           <%= icon_svg(:clipboard, class: "sidebar-icon") %>
-          <span>Ordem de Serviço</span>
+          <span>Ordens de Serviço</span>
         <% end %>
       </li>
       <li>
@@ -81,12 +81,12 @@
           <span>Usuários</span>
         <% end %>
       </li>
-      <li>
-        <%= link_to "#", class: "sidebar-nav__link" do %>
-          <%= icon_svg(:users, class: "sidebar-icon") %>
+      <!--<li>
+        <%#= link_to "#", class: "sidebar-nav__link" do %>
+          <%#= icon_svg(:users, class: "sidebar-icon") %>
           <span>Funcionários da Secretária</span>
-        <% end %>
-      </li>
+        <%# end %>
+      </li>-->
     </ul>
   </nav>
 

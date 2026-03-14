@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_14_184241) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_14_211157) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -136,6 +136,46 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_184241) do
     t.index ["tenant_id"], name: "index_secretaries_on_tenant_id"
   end
 
+  create_table "service_order_machines", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.decimal "hours_used", precision: 8, scale: 2
+    t.bigint "machine_id", null: false
+    t.text "notes"
+    t.bigint "service_order_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["machine_id"], name: "index_service_order_machines_on_machine_id"
+    t.index ["service_order_id"], name: "index_service_order_machines_on_service_order_id"
+  end
+
+  create_table "service_orders", force: :cascade do |t|
+    t.bigint "assigned_to_id"
+    t.string "code", null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.date "deadline", null: false
+    t.text "description"
+    t.text "observations"
+    t.integer "priority", default: 1, null: false
+    t.bigint "producer_id"
+    t.bigint "property_id"
+    t.bigint "requested_by_id"
+    t.datetime "scheduled_at"
+    t.bigint "secretary_id", null: false
+    t.bigint "service_provider_id"
+    t.datetime "started_at"
+    t.integer "status", default: 0, null: false
+    t.bigint "tenant_id", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assigned_to_id"], name: "index_service_orders_on_assigned_to_id"
+    t.index ["producer_id"], name: "index_service_orders_on_producer_id"
+    t.index ["property_id"], name: "index_service_orders_on_property_id"
+    t.index ["requested_by_id"], name: "index_service_orders_on_requested_by_id"
+    t.index ["secretary_id"], name: "index_service_orders_on_secretary_id"
+    t.index ["service_provider_id"], name: "index_service_orders_on_service_provider_id"
+    t.index ["tenant_id"], name: "index_service_orders_on_tenant_id"
+  end
+
   create_table "service_providers", force: :cascade do |t|
     t.string "cnpj"
     t.string "corporate_name"
@@ -184,6 +224,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_184241) do
   add_foreign_key "properties", "producers"
   add_foreign_key "properties", "tenants"
   add_foreign_key "secretaries", "tenants"
+  add_foreign_key "service_order_machines", "machines"
+  add_foreign_key "service_order_machines", "service_orders"
+  add_foreign_key "service_orders", "producers"
+  add_foreign_key "service_orders", "properties"
+  add_foreign_key "service_orders", "secretaries"
+  add_foreign_key "service_orders", "service_providers"
+  add_foreign_key "service_orders", "tenants"
+  add_foreign_key "service_orders", "users", column: "assigned_to_id"
+  add_foreign_key "service_orders", "users", column: "requested_by_id"
   add_foreign_key "service_providers", "secretaries"
   add_foreign_key "service_providers", "tenants"
   add_foreign_key "tenants", "users", column: "owner_id"
