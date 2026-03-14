@@ -50,7 +50,7 @@ gem "cancancan"
 
 gem "rails-i18n", "~> 8.1"
 
-gem "pagy", "~> 43.3", ">= 43.3.2"
+gem "pagy", "~> 43.3"
 
 gem "ransack", "~> 4.4", ">= 4.4.1"
 
