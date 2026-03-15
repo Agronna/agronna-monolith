@@ -5,7 +5,7 @@ class ServiceOrdersController < ApplicationController
 
   def index
     @q = ServiceOrder.where(tenant: Current.tenant)
-                     .includes(:secretary, :property, :producer, :assigned_to, :machines)
+                     .includes(:secretary, :property, :assigned_to, :machines)
                      .ransack(params[:q])
     @q.sorts = "deadline asc" if @q.sorts.empty?
     @pagy, @service_orders = pagy(@q.result(distinct: true), limit: 15)

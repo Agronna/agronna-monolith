@@ -7,7 +7,7 @@ class ServiceProvidersController < ApplicationController
   def index
     @q = ServiceProvider.ransack(params[:q])
     @q.sorts = "name asc" if @q.sorts.empty?
-    @pagy, @service_providers = pagy(:offset, @q.result.includes(:secretary, :address), limit: 15)
+    @pagy, @service_providers = pagy(:offset, @q.result.includes(:secretary), limit: 15)
   end
 
   def new

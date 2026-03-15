@@ -7,7 +7,7 @@ class PropertiesController < ApplicationController
   def index
     @q = Property.ransack(params[:q])
     @q.sorts = "name asc" if @q.sorts.empty?
-    @pagy, @properties = pagy(:offset, @q.result.includes(:producer, :address), limit: 15)
+    @pagy, @properties = pagy(:offset, @q.result.includes(:producer), limit: 15)
   end
 
   def new

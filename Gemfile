@@ -76,6 +76,12 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "bullet"
+
+  gem "byebug", platforms: [ :mri, :mingw, :x64_mingw ]
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "rspec-rails", "~> 8.0", ">= 8.0.4"
+  gem "shoulda-matchers", "~> 7.0", ">= 7.0.1"
 end
 
 group :development do

@@ -7,7 +7,7 @@ class ProducersController < ApplicationController
   def index
     @q = Producer.ransack(params[:q])
     @q.sorts = "name asc" if @q.sorts.empty?
-    @pagy, @producers = pagy(:offset, @q.result.includes(:address), limit: 15)
+    @pagy, @producers = pagy(:offset, @q.result, limit: 15)
   end
 
   def new
