@@ -30,7 +30,7 @@
         <% end %>
       </li>
       <li>
-        <%= link_to "#", class: "sidebar-nav__link" do %>
+        <%= link_to payment_receipts_path, class: "sidebar-nav__link #{'sidebar-nav__link--active' if controller_name == 'payment_receipts'}" do %>
           <%= icon_svg(:receipt, class: "sidebar-icon") %>
           <span>Comprovantes de Pagamento</span>
         <% end %>

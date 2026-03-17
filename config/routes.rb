@@ -23,4 +23,11 @@ Rails.application.routes.draw do
       patch :cancel, path: "cancelar"
     end
   end
+
+  resources :payment_receipts, path: "/comprovantes", path_names: { new: "novo", edit: "editar" } do
+    member do
+      patch :approve, path: "aprovar"
+      patch :reject, path: "rejeitar"
+    end
+  end
 end

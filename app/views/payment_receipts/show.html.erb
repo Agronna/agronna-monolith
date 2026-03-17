@@ -1,0 +1,132 @@
+<div class="container-fluid py-4">
+  <div class="mb-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><%= link_to "Comprovantes", payment_receipts_path %></li>
+        <li class="breadcrumb-item active" aria-current="page">Comprovante</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <span class="badge <%= @payment_receipt.status_badge_class %> mb-2">
+                <%= t("payment_receipts.statuses.#{@payment_receipt.status}") %>
+              </span>
+              <span class="badge <%= @payment_receipt.source_badge_class %> mb-2 ms-1">
+                <%= t("payment_receipts.sources.#{@payment_receipt.source}") %>
+              </span>
+              <h2 class="h4 mb-1"><%= number_to_currency(@payment_receipt.amount, unit: "R$ ", separator: ",", delimiter: ".") %></h2>
+              <p class="text-muted mb-0"><%= l(@payment_receipt.payment_date, format: :long) %></p>
+            </div>
+            <div class="btn-group">
+              <% if can?(:update, @payment_receipt) && @payment_receipt.status_pending? %>
+                <%= link_to edit_payment_receipt_path(@payment_receipt), class: "btn btn-outline-primary" do %>
+                  <%= icon_svg(:wrench, width: 18, height: 18) %> Editar
+                <% end %>
+                <%= button_to "Aprovar", approve_payment_receipt_path(@payment_receipt), method: :patch, class: "btn btn-success", data: { turbo_confirm: "Aprovar este comprovante?" } %>
+                <%= button_to "Rejeitar", reject_payment_receipt_path(@payment_receipt), method: :patch, class: "btn btn-outline-danger", data: { turbo_confirm: "Rejeitar este comprovante?" } %>
+              <% end %>
+            </div>
+          </div>
+
+          <% if @payment_receipt.reference.present? %>
+            <p class="mb-1"><strong>Referência:</strong> <%= @payment_receipt.reference %></p>
+          <% end %>
+          <% if @payment_receipt.description.present? %>
+            <p class="mb-0"><%= simple_format(@payment_receipt.description) %></p>
+          <% end %>
+          <% if @payment_receipt.rejection_reason.present? %>
+            <div class="alert alert-danger mt-3 mb-0">
+              <strong>Motivo da rejeição:</strong> <%= @payment_receipt.rejection_reason %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:receipt, width: 18, height: 18, class: "me-2") %>
+            Arquivo Anexado
+          </h6>
+        </div>
+        <div class="card-body">
+          <% if @payment_receipt.file.attached? %>
+            <% if @payment_receipt.file_image? && @payment_receipt.file.representable? %>
+              <div class="mb-3">
+                <%= image_tag @payment_receipt.file.representation(resize_to_limit: [ 800, 800 ]), class: "img-fluid rounded border", alt: "Comprovante" %>
+              </div>
+            <% end %>
+            <p class="mb-0">
+              <%= link_to url_for(@payment_receipt.file), target: "_blank", rel: "noopener", class: "btn btn-outline-primary" do %>
+                <%= icon_svg(:receipt, width: 18, height: 18) %>
+                Abrir <%= @payment_receipt.file.filename %>
+              <% end %>
+            </p>
+          <% else %>
+            <p class="text-muted mb-0">Nenhum arquivo anexado.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <% if @payment_receipt.observations.present? %>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6 class="text-muted small">Observações</h6>
+            <%= simple_format(@payment_receipt.observations) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Ordem de Serviço</h6>
+        </div>
+        <div class="card-body">
+          <%= link_to @payment_receipt.service_order.code, service_order_path(@payment_receipt.service_order), class: "fw-medium", data: { turbo_frame: "_top" } %>
+          <p class="text-muted small mb-0 mt-1"><%= @payment_receipt.service_order.title %></p>
+          <span class="badge <%= @payment_receipt.service_order.status_badge_class %> mt-2">
+            <%= t("service_orders.statuses.#{@payment_receipt.service_order.status}") %>
+          </span>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Vinculações</h6>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <small class="text-muted d-block">Secretaria</small>
+            <span><%= @payment_receipt.secretary.name %></span>
+          </li>
+          <% if @payment_receipt.producer.present? %>
+            <li class="list-group-item">
+              <small class="text-muted d-block">Produtor</small>
+              <span><%= @payment_receipt.producer.name %></span>
+            </li>
+          <% end %>
+          <% if @payment_receipt.approved_by.present? %>
+            <li class="list-group-item">
+              <small class="text-muted d-block"><%= @payment_receipt.status_approved? ? "Aprovado por" : "Rejeitado por" %></small>
+              <span><%= @payment_receipt.approved_by.name %></span>
+              <br><small class="text-muted"><%= l(@payment_receipt.approved_at, format: :short) %></small>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="d-grid gap-2">
+        <%= link_to "Ver Ordem de Serviço", service_order_path(@payment_receipt.service_order), class: "btn btn-outline-primary", data: { turbo_frame: "_top" } %>
+        <%= link_to "Voltar à Lista", payment_receipts_path, class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>

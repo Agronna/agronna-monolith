@@ -105,6 +105,19 @@ pt-BR:
         hours_used: Horas Utilizadas
         notes: Observações
 
+      payment_receipt:
+        payment_date: Data do Pagamento
+        amount: Valor
+        reference: Referência
+        description: Descrição
+        observations: Observações
+        secretary: Secretaria
+        service_order: Ordem de Serviço
+        producer: Produtor
+        status: Status
+        source: Origem
+        file: Arquivo
+
     errors:
       # format: "%{attribute} %{message}"
 
@@ -190,6 +203,7 @@ pt-BR:
     completed: "Ordem de serviço finalizada com sucesso."
     cancelled: "Ordem de serviço cancelada."
     cannot_start: "Não foi possível iniciar a ordem de serviço."
+    cannot_start_no_receipt: "É necessário ao menos um comprovante de pagamento aprovado para iniciar a ordem de serviço."
     cannot_complete: "Não foi possível finalizar a ordem de serviço."
     cannot_cancel: "Não foi possível cancelar a ordem de serviço."
     statuses:
@@ -203,6 +217,23 @@ pt-BR:
       normal: "Normal"
       high: "Alta"
       urgent: "Urgente"
+
+  payment_receipts:
+    created: "Comprovante de pagamento cadastrado com sucesso."
+    updated: "Comprovante de pagamento atualizado com sucesso."
+    destroyed: "Comprovante de pagamento excluído com sucesso."
+    approved: "Comprovante aprovado com sucesso."
+    rejected: "Comprovante rejeitado."
+    cannot_approve: "Não foi possível aprovar o comprovante."
+    cannot_reject: "Não foi possível rejeitar o comprovante."
+    statuses:
+      pending: "Pendente"
+      approved: "Aprovado"
+      rejected: "Rejeitado"
+    sources:
+      manual: "Manual"
+      bank_import: "Importação bancária"
+
   views:
     pagination:
       previous: "&laquo; Anterior"
