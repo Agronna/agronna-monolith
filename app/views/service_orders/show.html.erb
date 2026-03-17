@@ -72,6 +72,54 @@
         <% end %>
       </div>
 
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">
+            <%= icon_svg(:receipt, width: 18, height: 18, class: "me-2") %>
+            Comprovantes de Pagamento
+            <span class="badge bg-secondary ms-2"><%= @service_order.payment_receipts.count %></span>
+            <% if @service_order.payment_receipt_approved? %>
+              <span class="badge bg-success ms-1">Pagamento verificado</span>
+            <% elsif @service_order.status_pending? || @service_order.status_scheduled? %>
+              <span class="badge bg-warning text-dark ms-1">Aguardando comprovante aprovado para iniciar</span>
+            <% end %>
+          </h6>
+          <% if can?(:create, PaymentReceipt) && (@service_order.status_pending? || @service_order.status_scheduled?) %>
+            <%= link_to new_payment_receipt_path(service_order_id: @service_order.id, return_to: "service_order"), class: "btn btn-sm btn-primary" do %>
+              <%= icon_svg(:receipt, width: 16, height: 16) %> Anexar Comprovante
+            <% end %>
+          <% end %>
+        </div>
+        <% if @service_order.payment_receipts.any? %>
+          <ul class="list-group list-group-flush">
+            <% @service_order.payment_receipts.each do |receipt| %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-medium"><%= number_to_currency(receipt.amount, unit: "R$ ", separator: ",", delimiter: ".") %></span>
+                  <span class="text-muted ms-2"><%= l(receipt.payment_date) %></span>
+                  <% if receipt.reference.present? %>
+                    <br><small class="text-muted"><%= receipt.reference %></small>
+                  <% end %>
+                </div>
+                <div>
+                  <span class="badge <%= receipt.status_badge_class %> me-1"><%= t("payment_receipts.statuses.#{receipt.status}") %></span>
+                  <%= link_to "Ver", payment_receipt_path(receipt), class: "btn btn-sm btn-outline-secondary", data: { turbo_frame: "_top" } %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="card-body text-center text-muted">
+            <p class="mb-0">Nenhum comprovante anexado. O produtor deve entregar o comprovante para anexar e, após aprovação, a ordem de serviço poderá ser iniciada.</p>
+            <% if can?(:create, PaymentReceipt) %>
+              <%= link_to new_payment_receipt_path(service_order_id: @service_order.id, return_to: "service_order"), class: "btn btn-sm btn-outline-primary mt-2" do %>
+                <%= icon_svg(:receipt, width: 16, height: 16) %> Cadastrar Comprovante
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
       <% if @service_order.observations.present? %>
         <div class="card shadow-sm">
           <div class="card-header bg-white">

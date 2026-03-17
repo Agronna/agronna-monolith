@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_14_211157) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_224803) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -93,6 +93,38 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_211157) do
     t.datetime "updated_at", null: false
     t.index ["secretary_id"], name: "index_machines_on_secretary_id"
     t.index ["tenant_id"], name: "index_machines_on_tenant_id"
+  end
+
+  create_table "payment_receipts", force: :cascade do |t|
+    t.decimal "amount", precision: 12, scale: 2, null: false
+    t.datetime "approved_at"
+    t.bigint "approved_by_id"
+    t.string "bank_code"
+    t.string "bank_name"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "external_id"
+    t.text "observations"
+    t.date "payment_date", null: false
+    t.bigint "producer_id"
+    t.string "reference"
+    t.text "rejection_reason"
+    t.bigint "secretary_id", null: false
+    t.bigint "service_order_id", null: false
+    t.integer "source", default: 0, null: false
+    t.integer "status", default: 0, null: false
+    t.bigint "tenant_id", null: false
+    t.string "transaction_code"
+    t.datetime "updated_at", null: false
+    t.index ["approved_by_id"], name: "index_payment_receipts_on_approved_by_id"
+    t.index ["external_id"], name: "index_payment_receipts_on_external_id"
+    t.index ["payment_date"], name: "index_payment_receipts_on_payment_date"
+    t.index ["producer_id"], name: "index_payment_receipts_on_producer_id"
+    t.index ["secretary_id"], name: "index_payment_receipts_on_secretary_id"
+    t.index ["service_order_id"], name: "index_payment_receipts_on_service_order_id"
+    t.index ["source"], name: "index_payment_receipts_on_source"
+    t.index ["status"], name: "index_payment_receipts_on_status"
+    t.index ["tenant_id"], name: "index_payment_receipts_on_tenant_id"
   end
 
   create_table "producers", force: :cascade do |t|
@@ -220,6 +252,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_211157) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "machines", "secretaries"
   add_foreign_key "machines", "tenants"
+  add_foreign_key "payment_receipts", "producers"
+  add_foreign_key "payment_receipts", "secretaries"
+  add_foreign_key "payment_receipts", "service_orders"
+  add_foreign_key "payment_receipts", "tenants"
+  add_foreign_key "payment_receipts", "users", column: "approved_by_id"
   add_foreign_key "producers", "tenants"
   add_foreign_key "properties", "producers"
   add_foreign_key "properties", "tenants"

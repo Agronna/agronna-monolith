@@ -1,0 +1,15 @@
+<div class="container-fluid py-4">
+  <div class="mb-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><%= link_to "Comprovantes", payment_receipts_path %></li>
+        <li class="breadcrumb-item"><%= link_to "Comprovante", payment_receipt_path(@payment_receipt) %></li>
+        <li class="breadcrumb-item active" aria-current="page">Editar</li>
+      </ol>
+    </nav>
+    <h1 class="h3 mb-1">Editar Comprovante de Pagamento</h1>
+    <p class="text-muted mb-0"><%= l(@payment_receipt.payment_date) %> - <%= number_to_currency(@payment_receipt.amount, unit: "R$ ") %></p>
+  </div>
+
+  <%= render "form" %>
+</div>

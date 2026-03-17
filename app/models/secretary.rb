@@ -8,6 +8,7 @@ class Secretary < ApplicationRecord
   has_many :machines, dependent: :restrict_with_error
   has_many :service_orders, dependent: :restrict_with_error
   has_many :service_providers, dependent: :restrict_with_error
+  has_many :payment_receipts, dependent: :restrict_with_error
 
   accepts_nested_attributes_for :address, allow_destroy: true
 

@@ -1,0 +1,127 @@
+<div class="container-fluid py-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Comprovantes de Pagamento</h1>
+      <p class="text-muted mb-0">Cadastro e anexo de comprovantes para ordens de serviço</p>
+    </div>
+    <% if can?(:create, PaymentReceipt) %>
+      <%= link_to new_payment_receipt_path, class: "btn btn-primary mt-3 mt-md-0" do %>
+        <%= icon_svg(:receipt, width: 20, height: 20, class: "me-1") %>
+        Novo Comprovante
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= search_form_for @q, url: payment_receipts_path, method: :get, html: { class: "mb-4", data: { turbo_frame: "payment_receipts_list" } } do |f| %>
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h6 class="card-title mb-3">Filtrar</h6>
+        <div class="row g-2 g-md-3 align-items-end">
+          <div class="col-12 col-sm-6 col-lg-2">
+            <%= f.label :payment_date_gteq, "Data a partir de", class: "form-label small text-muted" %>
+            <%= f.date_field :payment_date_gteq, class: "form-control form-control-sm" %>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-2">
+            <%= f.label :payment_date_lteq, "Data até", class: "form-label small text-muted" %>
+            <%= f.date_field :payment_date_lteq, class: "form-control form-control-sm" %>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <%= f.label :status_eq, "Status", class: "form-label small text-muted" %>
+            <%= f.select :status_eq, PaymentReceipt.statuses.keys.map { |k| [t("payment_receipts.statuses.#{k}"), k] }, { include_blank: "Todos" }, class: "form-select form-select-sm" %>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <%= f.label :reference_cont, "Referência", class: "form-label small text-muted" %>
+            <%= f.search_field :reference_cont, class: "form-control form-control-sm", placeholder: "Contém..." %>
+          </div>
+          <div class="col-12 col-lg-2 d-flex align-items-end gap-1">
+            <%= f.submit "Filtrar", class: "btn btn-primary btn-sm me-1" %>
+            <%= link_to "Limpar", payment_receipts_path, class: "btn btn-outline-secondary btn-sm", data: { turbo_frame: "payment_receipts_list" } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= turbo_frame_tag "payment_receipts_list" do %>
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-3">Data</th>
+                <th>Valor</th>
+                <th>Referência</th>
+                <th>Ordem de Serviço</th>
+                <th>Produtor</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Anexo</th>
+                <th class="text-end pe-3">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @payment_receipts.any? %>
+                <% @payment_receipts.each do |receipt| %>
+                  <tr>
+                    <td class="ps-3"><%= l(receipt.payment_date, format: :short) %></td>
+                    <td><%= number_to_currency(receipt.amount, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+                    <td><%= receipt.reference.presence || "-" %></td>
+                    <td>
+                      <%= link_to receipt.service_order.code, service_order_path(receipt.service_order), data: { turbo_frame: "_top" } %>
+                      <br><small class="text-muted text-truncate d-inline-block" style="max-width: 180px;"><%= receipt.service_order.title %></small>
+                    </td>
+                    <td><%= receipt.producer&.name.presence || "-" %></td>
+                    <td class="text-center">
+                      <span class="badge <%= receipt.status_badge_class %>">
+                        <%= t("payment_receipts.statuses.#{receipt.status}") %>
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <% if receipt.file.attached? %>
+                        <span class="text-success" title="Anexo presente">✓</span>
+                      <% else %>
+                        <span class="text-muted">-</span>
+                      <% end %>
+                    </td>
+                    <td class="text-end pe-3">
+                      <div class="btn-group btn-group-sm">
+                        <%= link_to payment_receipt_path(receipt), class: "btn btn-outline-secondary", title: "Visualizar", data: { turbo_frame: "_top" } do %>
+                          <%= icon_svg(:receipt, width: 16, height: 16) %>
+                        <% end %>
+                        <% if can?(:update, receipt) && receipt.status_pending? %>
+                          <%= link_to edit_payment_receipt_path(receipt), class: "btn btn-outline-primary", title: "Editar", data: { turbo_frame: "_top" } do %>
+                            <%= icon_svg(:wrench, width: 16, height: 16) %>
+                          <% end %>
+                          <%= button_to approve_payment_receipt_path(receipt), method: :patch, class: "btn btn-outline-success", title: "Aprovar", data: { turbo_confirm: "Aprovar este comprovante?" } do %>
+                            ✓
+                          <% end %>
+                          <%= button_to reject_payment_receipt_path(receipt), method: :patch, class: "btn btn-outline-danger", title: "Rejeitar", data: { turbo_confirm: "Rejeitar este comprovante?" } do %>
+                            <%= icon_svg(:close, width: 16, height: 16) %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              <% else %>
+                <tr>
+                  <td colspan="8" class="text-center py-5 text-muted">
+                    <%= icon_svg(:receipt, width: 48, height: 48, class: "mb-3 opacity-50") %>
+                    <p class="mb-0">Nenhum comprovante encontrado.</p>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <% if @payment_receipts.any? %>
+        <div class="card-footer bg-light d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+          <div class="text-muted small"><%== @pagy.info_tag %></div>
+          <nav aria-label="Paginação"><%== @pagy.series_nav("bootstrap") %></nav>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

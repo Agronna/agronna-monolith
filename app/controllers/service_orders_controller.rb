@@ -54,6 +54,10 @@ class ServiceOrdersController < ApplicationController
   end
 
   def start
+    unless @service_order.payment_receipt_approved?
+      redirect_to service_orders_path, alert: t("service_orders.cannot_start_no_receipt")
+      return
+    end
     if @service_order.start!
       redirect_to service_orders_path, notice: t("service_orders.started")
     else
@@ -80,7 +84,7 @@ class ServiceOrdersController < ApplicationController
   private
 
   def set_service_order
-    @service_order = ServiceOrder.find(params[:id])
+    @service_order = ServiceOrder.includes(:payment_receipts).find(params[:id])
   end
 
   def set_form_collections
