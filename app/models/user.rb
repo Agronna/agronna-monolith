@@ -5,6 +5,8 @@ class User < ApplicationRecord
 
   belongs_to :secretary, optional: true
   has_one :owned_tenant, class_name: "Tenant", foreign_key: :owner_id, dependent: :nullify
+  has_many :schedule_assignments, dependent: :restrict_with_error
+  has_many :schedules, through: :schedule_assignments
 
   has_secure_password
 

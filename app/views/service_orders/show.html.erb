@@ -80,6 +80,11 @@
             <span class="badge bg-secondary ms-2"><%= @service_order.payment_receipts.count %></span>
             <% if @service_order.payment_receipt_approved? %>
               <span class="badge bg-success ms-1">Pagamento verificado</span>
+              <% if can?(:create, Schedule) %>
+                <%= link_to new_schedule_path(service_order_id: @service_order.id, return_to: "service_order"), class: "btn btn-sm btn-success ms-2" do %>
+                  <%= icon_svg(:calendar, width: 14, height: 14) %> Agendar prestação
+                <% end %>
+              <% end %>
             <% elsif @service_order.status_pending? || @service_order.status_scheduled? %>
               <span class="badge bg-warning text-dark ms-1">Aguardando comprovante aprovado para iniciar</span>
             <% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_224803) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_233123) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -155,6 +155,47 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_224803) do
     t.index ["tenant_id"], name: "index_properties_on_tenant_id"
   end
 
+  create_table "schedule_assignments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "notes"
+    t.string "role"
+    t.bigint "schedule_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["schedule_id", "user_id"], name: "idx_schedule_assignments_unique", unique: true
+    t.index ["schedule_id"], name: "index_schedule_assignments_on_schedule_id"
+    t.index ["user_id"], name: "index_schedule_assignments_on_user_id"
+  end
+
+  create_table "schedule_machines", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.decimal "hours_planned", precision: 6, scale: 2
+    t.bigint "machine_id", null: false
+    t.text "notes"
+    t.bigint "schedule_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["machine_id"], name: "index_schedule_machines_on_machine_id"
+    t.index ["schedule_id", "machine_id"], name: "idx_schedule_machines_unique", unique: true
+    t.index ["schedule_id"], name: "index_schedule_machines_on_schedule_id"
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "observations"
+    t.datetime "scheduled_at", null: false
+    t.datetime "scheduled_end_at"
+    t.bigint "secretary_id", null: false
+    t.bigint "service_order_id", null: false
+    t.integer "status", default: 0, null: false
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scheduled_at"], name: "index_schedules_on_scheduled_at"
+    t.index ["secretary_id"], name: "index_schedules_on_secretary_id"
+    t.index ["service_order_id"], name: "index_schedules_on_service_order_id"
+    t.index ["status"], name: "index_schedules_on_status"
+    t.index ["tenant_id"], name: "index_schedules_on_tenant_id"
+  end
+
   create_table "secretaries", force: :cascade do |t|
     t.string "cnpj", null: false
     t.string "corporate_name", null: false
@@ -260,6 +301,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_224803) do
   add_foreign_key "producers", "tenants"
   add_foreign_key "properties", "producers"
   add_foreign_key "properties", "tenants"
+  add_foreign_key "schedule_assignments", "schedules"
+  add_foreign_key "schedule_assignments", "users"
+  add_foreign_key "schedule_machines", "machines"
+  add_foreign_key "schedule_machines", "schedules"
+  add_foreign_key "schedules", "secretaries"
+  add_foreign_key "schedules", "service_orders"
+  add_foreign_key "schedules", "tenants"
   add_foreign_key "secretaries", "tenants"
   add_foreign_key "service_order_machines", "machines"
   add_foreign_key "service_order_machines", "service_orders"

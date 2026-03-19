@@ -18,6 +18,10 @@ puts "🌱 Iniciando seeds..."
 if Rails.env.development?
   puts "\n🧹 Limpando dados antigos..."
   # Ordem importante devido às foreign keys
+  ScheduleAssignment.delete_all
+  ScheduleMachine.delete_all
+  Schedule.unscoped.delete_all
+  PaymentReceipt.unscoped.delete_all
   ServiceOrderMachine.delete_all
   ServiceOrder.unscoped.delete_all
   Address.delete_all
@@ -344,6 +348,57 @@ TENANTS_CONFIG.each do |config|
     end
   end
   puts "  ✅ #{service_orders_count} ordem(ns) de serviço"
+
+  # Comprovantes de pagamento (origem importação bancária, aprovados) para permitir agendamentos
+  service_orders_list = ServiceOrder.unscoped.where(tenant: tenant).to_a
+  payment_receipts_count = 0
+  service_orders_list.each_with_index do |so, idx|
+    next if so.payment_receipts.any?
+    next unless so.status_pending? || so.status_scheduled? || so.status_in_progress?
+
+    PaymentReceipt.unscoped.find_or_create_by!(tenant: tenant, service_order: so, payment_date: Date.current - (idx % 14).days) do |pr|
+      pr.amount = [ 500.0, 1200.0, 800.0, 2500.0, 350.0 ].sample
+      pr.reference = "DOC-#{Date.current.year}-#{1000 + idx}"
+      pr.description = "Pagamento referente à OS #{so.code}"
+      pr.source = :bank_import
+      pr.status = :approved
+      pr.secretary = so.secretary
+      pr.producer = so.producer
+      pr.approved_by = users_list.first
+      pr.approved_at = Time.current - (idx % 7).days
+      pr.bank_name = [ "Banco do Brasil", "Caixa", "Itaú", "Bradesco", "Sicoob" ].sample
+      pr.bank_code = format("%03d", rand(1..399))
+      pr.transaction_code = "TXN-#{rand(100000..999999)}"
+    end
+    payment_receipts_count += 1
+  end
+  puts "  ✅ #{payment_receipts_count} comprovante(s) de pagamento (aprovados)"
+
+  # Agendamentos (apenas para OS com comprovante aprovado)
+  os_com_receipt = ServiceOrder.unscoped.where(tenant: tenant).select { |so| so.payment_receipt_approved? }
+  schedules_count = 0
+  os_com_receipt.first(12).each_with_index do |so, idx|
+    next if so.schedules.any?
+
+    start_at = Time.current + (idx % 21).days + 8.hours + (idx % 4).hours
+    end_at = start_at + [ 2, 4, 6, 8 ].sample.hours
+    Schedule.unscoped.find_or_create_by!(tenant: tenant, service_order: so, scheduled_at: start_at) do |s|
+      s.scheduled_end_at = end_at
+      s.secretary = so.secretary
+      s.status = [ :scheduled, :scheduled, :confirmed, :in_progress ].sample
+      s.observations = idx % 3 == 0 ? "Agendamento para prestação do serviço." : nil
+    end.tap do |sched|
+      if machines_list.any? && sched.machines.empty?
+        machines_list.sample((idx % 2) + 1).each { |m| sched.machines << m }
+      end
+      if users_list.any? && sched.assigned_users.empty?
+        users_list.sample((idx % 3) + 1).each { |u| sched.assigned_users << u }
+      end
+      sched.save!
+      schedules_count += 1
+    end
+  end
+  puts "  ✅ #{schedules_count} agendamento(s)"
 end
 
 # ==============================================================================
@@ -362,6 +417,8 @@ puts "   Propriedades:         #{Property.unscoped.count}"
 puts "   Maquinários:          #{Machine.unscoped.count}"
 puts "   Prestadores:          #{ServiceProvider.unscoped.count}"
 puts "   Ordens de Serviço:    #{ServiceOrder.unscoped.count}"
+puts "   Comprovantes:         #{PaymentReceipt.unscoped.count}"
+puts "   Agendamentos:        #{Schedule.unscoped.count}"
 puts "   Endereços:            #{Address.count}"
 
 puts "\n🔑 Credenciais de acesso (senha: Senha@123):"
