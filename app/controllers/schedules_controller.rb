@@ -82,8 +82,8 @@ class SchedulesController < ApplicationController
   def create
     @schedule = Schedule.new(schedule_params)
     @schedule.tenant = Current.tenant
-    @schedule.machine_ids = Array(params[:schedule][:machine_ids]).reject(&:blank?).map(&:to_i)
-    build_schedule_assignments_from_user_ids(Array(params[:schedule][:user_ids]).reject(&:blank?).map(&:to_i))
+    @schedule.machine_ids = schedule_machine_ids_param
+    build_schedule_assignments_from_user_ids(schedule_user_ids_param)
     authorize! :create, @schedule
 
     if @schedule.save
@@ -96,8 +96,8 @@ class SchedulesController < ApplicationController
 
   def update
     @schedule.assign_attributes(schedule_params)
-    @schedule.machine_ids = Array(params[:schedule][:machine_ids]).reject(&:blank?).map(&:to_i) if params[:schedule][:machine_ids]
-    build_schedule_assignments_from_user_ids(Array(params[:schedule][:user_ids]).reject(&:blank?).map(&:to_i)) if params[:schedule][:user_ids]
+    @schedule.machine_ids = schedule_machine_ids_param if schedule_params_present?
+    build_schedule_assignments_from_user_ids(schedule_user_ids_param) if schedule_params_present?
     if @schedule.save
       redirect_to_after_save(t("schedules.updated"))
     else
@@ -159,6 +159,21 @@ class SchedulesController < ApplicationController
     user_ids.uniq.each { |user_id| @schedule.schedule_assignments.build(user_id: user_id) }
   end
 
+  def schedule_params_present?
+    params[:schedule].present?
+  end
+
+  def schedule_machine_ids_param
+    raw = params.dig(:schedule, :machine_ids)
+    Array(raw).reject(&:blank?).map(&:to_i)
+  end
+
+  def schedule_user_ids_param
+    raw = params.dig(:schedule, :user_ids)
+    Array(raw).reject(&:blank?).map(&:to_i)
+  end
+
+  # Apenas atributos reais da tabela schedules. machine_ids / user_ids são handled via associações.
   def schedule_params
     params.require(:schedule).permit(
       :scheduled_at, :scheduled_end_at, :status, :observations,
@@ -166,6 +181,6 @@ class SchedulesController < ApplicationController
       :return_to,
       machine_ids: [],
       user_ids: []
-    ).except(:return_to)
+    ).except(:return_to, :machine_ids, :user_ids)
   end
 end
