@@ -82,7 +82,7 @@ class SchedulesController < ApplicationController
   def create
     @schedule = Schedule.new(schedule_params)
     @schedule.tenant = Current.tenant
-    @schedule.machine_ids = schedule_machine_ids_param
+    sync_schedule_machines_with_service_order
     build_schedule_assignments_from_user_ids(schedule_user_ids_param)
     authorize! :create, @schedule
 
@@ -96,7 +96,7 @@ class SchedulesController < ApplicationController
 
   def update
     @schedule.assign_attributes(schedule_params)
-    @schedule.machine_ids = schedule_machine_ids_param if schedule_params_present?
+    sync_schedule_machines_with_service_order
     build_schedule_assignments_from_user_ids(schedule_user_ids_param) if schedule_params_present?
     if @schedule.save
       redirect_to_after_save(t("schedules.updated"))
@@ -131,7 +131,13 @@ class SchedulesController < ApplicationController
                                   .order(deadline: :asc)
     @service_orders = [ @schedule.service_order ] + @service_orders.to_a if @schedule&.service_order.present? && @service_orders.exclude?(@schedule.service_order)
     @secretaries = Secretary.where(tenant: Current.tenant).status_active.order(:name)
-    @machines = Machine.where(tenant: Current.tenant).status_active.order(:name)
+    service_order_id = @schedule&.service_order_id || params[:service_order_id].presence || params.dig(:schedule, :service_order_id)
+    service_order = ServiceOrder.where(tenant: Current.tenant).find_by(id: service_order_id)
+    @machines = if service_order.present?
+      service_order.machines.status_active.order(:name)
+    else
+      Machine.where(tenant: Current.tenant).status_active.order(:name)
+    end
     @users = User.where(tenant: Current.tenant).order(:name)
   end
 
@@ -161,6 +167,14 @@ class SchedulesController < ApplicationController
 
   def schedule_params_present?
     params[:schedule].present?
+  end
+
+  def sync_schedule_machines_with_service_order
+    service_order = @schedule.service_order || @schedule&.service_order&.reload
+    return unless service_order.present?
+
+    # A regra do negócio: o maquinario do agendamento deve sempre refletir o maquinario da OS.
+    @schedule.machine_ids = service_order.machines.pluck(:id)
   end
 
   def schedule_machine_ids_param
