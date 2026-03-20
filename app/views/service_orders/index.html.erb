@@ -126,7 +126,7 @@
                           <%= icon_svg(:clipboard, width: 16, height: 16) %>
                         <% end %>
 
-                        <% if can?(:update, order) %>
+                        <% if can?(:update, order) && !order.status_cancelled? && !order.payment_receipt_approved? %>
                           <%= link_to edit_service_order_path(order), class: "btn btn-outline-primary", title: "Editar", data: { turbo_frame: "_top" } do %>
                             <%= icon_svg(:wrench, width: 16, height: 16) %>
                           <% end %>
