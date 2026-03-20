@@ -16,6 +16,7 @@ class Ability
       can :manage, ServiceProvider
       can :manage, ServiceOrder
       can :manage, PaymentReceipt
+      can :manage, Schedule
 
     elsif user.sub_admin?
       can %i[read update], User, id: user.id
@@ -26,6 +27,7 @@ class Ability
       can %i[read create update], ServiceProvider
       can %i[read create update], ServiceOrder
       can %i[read create update], PaymentReceipt
+      can %i[read create update], Schedule
 
     else
       can %i[read update], User, id: user.id
@@ -36,6 +38,7 @@ class Ability
       can :read, ServiceProvider
       can :read, ServiceOrder
       can :read, PaymentReceipt
+      can :read, Schedule
     end
   end
 end

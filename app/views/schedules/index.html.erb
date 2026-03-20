@@ -1,0 +1,133 @@
+<div class="container-fluid py-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Agendamentos</h1>
+      <p class="text-muted mb-0">Prestação de serviços após pagamento e comprovante aprovado</p>
+    </div>
+    <div class="d-flex gap-2 mt-3 mt-md-0">
+      <%= link_to calendar_schedules_path, class: "btn btn-outline-primary" do %>
+        <%= icon_svg(:calendar, width: 20, height: 20, class: "me-1") %>
+        Calendário
+      <% end %>
+      <% if can?(:create, Schedule) %>
+        <%= link_to new_schedule_path, class: "btn btn-primary" do %>
+          <%= icon_svg(:calendar, width: 20, height: 20, class: "me-1") %>
+          Novo Agendamento
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= search_form_for @q, url: schedules_path, method: :get, html: { class: "mb-4", data: { turbo_frame: "schedules_list" } } do |f| %>
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h6 class="card-title mb-3">Filtrar</h6>
+        <div class="row g-2 g-md-3 align-items-end">
+          <div class="col-12 col-sm-6 col-lg-3">
+            <%= f.label :scheduled_at_gteq, "Data a partir de", class: "form-label small text-muted" %>
+            <%= f.datetime_field :scheduled_at_gteq, class: "form-control form-control-sm" %>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <%= f.label :scheduled_at_lteq, "Data até", class: "form-label small text-muted" %>
+            <%= f.datetime_field :scheduled_at_lteq, class: "form-control form-control-sm" %>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <%= f.label :status_eq, "Status", class: "form-label small text-muted" %>
+            <%= f.select :status_eq, Schedule.statuses.keys.map { |k| [t("schedules.statuses.#{k}"), k] }, { include_blank: "Todos" }, class: "form-select form-select-sm" %>
+          </div>
+
+          <div class="col-12 col-lg-2 d-flex align-items-end gap-1">
+            <%= f.submit "Filtrar", class: "btn btn-primary btn-sm me-1" %>
+            <%= link_to "Limpar", schedules_path, class: "btn btn-outline-secondary btn-sm", data: { turbo_frame: "schedules_list" } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= turbo_frame_tag "schedules_list" do %>
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-3">Data / Hora</th>
+                <th>Ordem de Serviço</th>
+                <th>Secretaria</th>
+                <th class="text-center">Status</th>
+                <th>Maquinário</th>
+                <th>Equipe</th>
+                <th class="text-end pe-3">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @schedules.any? %>
+                <% @schedules.each do |schedule| %>
+                  <tr>
+                    <td class="ps-3">
+                      <span class="fw-medium"><%= l(schedule.scheduled_at, format: :short) %></span>
+                      <% if schedule.scheduled_end_at.present? %>
+                        <br><small class="text-muted">até <%= l(schedule.scheduled_end_at, format: :short) %></small>
+                      <% end %>
+                    </td>
+                    <td>
+                      <%= link_to schedule.service_order.code, service_order_path(schedule.service_order), data: { turbo_frame: "_top" } %>
+                      <br><small class="text-muted text-truncate d-inline-block" style="max-width: 200px;"><%= schedule.service_order.title %></small>
+                    </td>
+                    <td><small><%= schedule.secretary.name %></small></td>
+                    <td class="text-center">
+                      <span class="badge <%= schedule.status_badge_class %>">
+                        <%= t("schedules.statuses.#{schedule.status}") %>
+                      </span>
+                    </td>
+                    <td>
+                      <% if schedule.machines.any? %>
+                        <small><%= schedule.machines.map(&:name).join(", ") %></small>
+                      <% else %>
+                        <span class="text-muted">-</span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <% if schedule.assigned_users.any? %>
+                        <small><%= schedule.assigned_users.map(&:name).join(", ") %></small>
+                      <% else %>
+                        <span class="text-muted">-</span>
+                      <% end %>
+                    </td>
+                    <td class="text-end pe-3">
+                      <div class="btn-group btn-group-sm">
+                        <%= link_to schedule_path(schedule), class: "btn btn-outline-secondary", title: "Visualizar", data: { turbo_frame: "_top" } do %>
+                          <%= icon_svg(:calendar, width: 16, height: 16) %>
+                        <% end %>
+                        <% if can?(:update, schedule) %>
+                          <%= link_to edit_schedule_path(schedule), class: "btn btn-outline-primary", title: "Editar", data: { turbo_frame: "_top" } do %>
+                            <%= icon_svg(:wrench, width: 16, height: 16) %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              <% else %>
+                <tr>
+                  <td colspan="7" class="text-center py-5 text-muted">
+                    <%= icon_svg(:calendar, width: 48, height: 48, class: "mb-3 opacity-50") %>
+                    <p class="mb-0">Nenhum agendamento encontrado.</p>
+                    <%= link_to "Ver calendário", calendar_schedules_path, class: "btn btn-sm btn-outline-primary mt-2" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <% if @schedules.any? %>
+        <div class="card-footer bg-light d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+          <div class="text-muted small"><%== @pagy.info_tag %></div>
+          <nav aria-label="Paginação"><%== @pagy.series_nav("bootstrap") %></nav>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

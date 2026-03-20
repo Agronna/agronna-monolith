@@ -18,9 +18,9 @@
     <p class="sidebar-nav__group">Gestão</p>
     <ul class="sidebar-nav__list">
       <li>
-        <%= link_to "#", class: "sidebar-nav__link #{'sidebar-nav__link--active' if false}" do %>
+        <%= link_to schedules_path, class: "sidebar-nav__link #{'sidebar-nav__link--active' if controller_name == 'schedules'}" do %>
           <%= icon_svg(:calendar, class: "sidebar-icon") %>
-          <span>Agendamento</span>
+          <span>Agendamentos</span>
         <% end %>
       </li>
       <li>

@@ -7,6 +7,8 @@ class Machine < ApplicationRecord
 
   has_many :service_order_machines, dependent: :restrict_with_error
   has_many :service_orders, through: :service_order_machines
+  has_many :schedule_machines, dependent: :restrict_with_error
+  has_many :schedules, through: :schedule_machines
 
   validates :name, presence: true
   validates :chassis, presence: true, uniqueness: { scope: :tenant_id, case_sensitive: false }

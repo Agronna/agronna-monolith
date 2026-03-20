@@ -20,6 +20,7 @@ class ServiceOrder < ApplicationRecord
   has_many :machines, through: :service_order_machines
 
   has_many :payment_receipts, dependent: :restrict_with_error
+  has_many :schedules, dependent: :restrict_with_error
 
   accepts_nested_attributes_for :service_order_machines, allow_destroy: true, reject_if: :all_blank
 

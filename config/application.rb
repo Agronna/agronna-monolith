@@ -33,10 +33,14 @@ module Agronna
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
+    config.i18n.load_path += Dir[Rails.root.join("my", "locales", "*.{rb,yml}").to_s]
+
+    config.time_zone = "Brasilia"
+    config.active_record.default_timezone = :local
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    config.active_record.yaml_column_permitted_classes = [ Symbol, Date, Time, ActiveSupport::TimeWithZone, ActiveSupport::TimeZone ]
   end
 end

@@ -1,0 +1,98 @@
+<div class="container-fluid py-4">
+  <div class="mb-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><%= link_to "Agendamentos", schedules_path %></li>
+        <li class="breadcrumb-item active" aria-current="page"><%= l(@schedule.scheduled_at, format: :short) %></li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <span class="badge <%= @schedule.status_badge_class %> mb-2">
+                <%= t("schedules.statuses.#{@schedule.status}") %>
+              </span>
+              <h2 class="h4 mb-1"><%= @schedule.service_order.title %></h2>
+              <p class="text-muted mb-0 font-monospace"><%= @schedule.service_order.code %></p>
+            </div>
+            <% if can?(:update, @schedule) %>
+              <%= link_to edit_schedule_path(@schedule), class: "btn btn-outline-primary" do %>
+                <%= icon_svg(:wrench, width: 18, height: 18) %> Editar
+              <% end %>
+            <% end %>
+          </div>
+          <dl class="row mb-0">
+            <dt class="col-sm-3">Início</dt>
+            <dd class="col-sm-9"><%= l(@schedule.scheduled_at, format: :long) %></dd>
+            <% if @schedule.scheduled_end_at.present? %>
+              <dt class="col-sm-3">Término</dt>
+              <dd class="col-sm-9"><%= l(@schedule.scheduled_end_at, format: :long) %></dd>
+            <% end %>
+            <dt class="col-sm-3">Secretaria</dt>
+            <dd class="col-sm-9"><%= @schedule.secretary.name %></dd>
+          </dl>
+          <% if @schedule.observations.present? %>
+            <hr>
+            <h6 class="text-muted small">Observações</h6>
+            <%= simple_format(@schedule.observations) %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:tractor, width: 18, height: 18, class: "me-2") %>
+            Maquinário
+          </h6>
+        </div>
+        <% if @schedule.machines.any? %>
+          <ul class="list-group list-group-flush">
+            <% @schedule.machines.each do |machine| %>
+              <li class="list-group-item"><%= machine.name %> <small class="text-muted">(<%= machine.plate %>)</small></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="card-body text-muted">Nenhum maquinário alocado.</div>
+        <% end %>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:users, width: 18, height: 18, class: "me-2") %>
+            Equipe
+          </h6>
+        </div>
+        <% if @schedule.assigned_users.any? %>
+          <ul class="list-group list-group-flush">
+            <% @schedule.assigned_users.each do |user| %>
+              <li class="list-group-item"><%= user.name %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="card-body text-muted">Nenhum membro da equipe alocado.</div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h6 class="text-muted small">Ordem de Serviço</h6>
+          <%= link_to @schedule.service_order.code, service_order_path(@schedule.service_order), class: "fw-medium", data: { turbo_frame: "_top" } %>
+          <p class="text-muted small mb-0 mt-1"><%= @schedule.service_order.title %></p>
+        </div>
+      </div>
+      <div class="d-grid gap-2">
+        <%= link_to "Ver calendário", calendar_schedules_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Voltar à lista", schedules_path, class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>

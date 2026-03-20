@@ -118,6 +118,16 @@ pt-BR:
         source: Origem
         file: Arquivo
 
+      schedule:
+        scheduled_at: Data e hora de início
+        scheduled_end_at: Data e hora de término
+        status: Status
+        observations: Observações
+        secretary: Secretaria
+        service_order: Ordem de Serviço
+        machines: Maquinário
+        assigned_users: Equipe
+
     errors:
       # format: "%{attribute} %{message}"
 
@@ -233,6 +243,17 @@ pt-BR:
     sources:
       manual: "Manual"
       bank_import: "Importação bancária"
+
+  schedules:
+    created: "Agendamento criado com sucesso."
+    updated: "Agendamento atualizado com sucesso."
+    destroyed: "Agendamento excluído com sucesso."
+    statuses:
+      scheduled: "Agendado"
+      confirmed: "Confirmado"
+      in_progress: "Em andamento"
+      completed: "Concluído"
+      cancelled: "Cancelado"
 
   views:
     pagination:

@@ -30,4 +30,11 @@ Rails.application.routes.draw do
       patch :reject, path: "rejeitar"
     end
   end
+
+  resources :schedules, path: "/agendamentos", path_names: { new: "novo", edit: "editar" } do
+    collection do
+      get :calendar, path: "calendario"
+      get :events
+    end
+  end
 end
