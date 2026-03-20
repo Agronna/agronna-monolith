@@ -82,6 +82,17 @@ A Ordem de Serviço (OS) é o documento que formaliza a solicitação e execuç�
 
 ---
 
+## Edição Restringida
+
+Uma Ordem de Serviço (OS) **não pode ser editada** (ação `edit` e atualização `update`) se:
+
+- Existe **pagamento confirmado** para a OS (`payment_receipt_approved?` / “Pagamento verificado”);
+- A OS está **cancelada** (`status = cancelled`).
+
+Observação: a ação de **cancelar** (`cancel!`) é bloqueada apenas quando a OS **já** está cancelada.
+
+---
+
 ## Prioridades
 
 | Prioridade | Código | Uso Recomendado |

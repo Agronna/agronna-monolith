@@ -2,6 +2,8 @@ class ServiceOrdersController < ApplicationController
   before_action :set_service_order, only: %i[show edit update destroy start complete cancel]
   before_action :set_form_collections, only: %i[new create edit update]
   load_and_authorize_resource except: %i[create new]
+  before_action :ensure_service_order_editable, only: %i[edit update]
+  before_action :ensure_service_order_not_cancelled, only: %i[cancel]
 
   def index
     @q = ServiceOrder.where(tenant: Current.tenant)
@@ -105,5 +107,25 @@ class ServiceOrdersController < ApplicationController
       machine_ids: [],
       service_order_machines_attributes: [ :id, :machine_id, :hours_used, :notes, :_destroy ]
     )
+  end
+
+  def ensure_service_order_editable
+    return unless @service_order.present?
+
+    if @service_order.status_cancelled?
+      redirect_to service_orders_path, alert: t("service_orders.cannot_edit_cancelled")
+      return
+    end
+
+    if @service_order.payment_receipt_approved?
+      redirect_to service_orders_path, alert: t("service_orders.cannot_edit_payment_approved")
+      return
+    end
+  end
+
+  def ensure_service_order_not_cancelled
+    return unless @service_order.status_cancelled?
+
+    redirect_to service_orders_path, alert: t("service_orders.cannot_cancel_cancelled")
   end
 end

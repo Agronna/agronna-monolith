@@ -216,6 +216,9 @@ pt-BR:
     cannot_start_no_receipt: "É necessário ao menos um comprovante de pagamento aprovado para iniciar a ordem de serviço."
     cannot_complete: "Não foi possível finalizar a ordem de serviço."
     cannot_cancel: "Não foi possível cancelar a ordem de serviço."
+    cannot_edit_payment_approved: "Não é possível editar uma ordem de serviço com pagamento confirmado."
+    cannot_edit_cancelled: "Não é possível editar uma ordem de serviço cancelada."
+    cannot_cancel_cancelled: "Não é possível cancelar uma ordem de serviço já cancelada."
     statuses:
       pending: "Pendente"
       scheduled: "Agendada"

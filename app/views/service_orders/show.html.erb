@@ -27,7 +27,7 @@
               <p class="text-muted mb-0 font-monospace"><%= @service_order.code %></p>
             </div>
             <div class="btn-group">
-              <% if can?(:update, @service_order) %>
+              <% if can?(:update, @service_order) && !@service_order.status_cancelled? && !@service_order.payment_receipt_approved? %>
                 <%= link_to edit_service_order_path(@service_order), class: "btn btn-outline-primary" do %>
                   <%= icon_svg(:wrench, width: 18, height: 18) %> Editar
                 <% end %>
