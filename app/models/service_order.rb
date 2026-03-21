@@ -78,17 +78,19 @@ class ServiceOrder < ApplicationRecord
     payment_receipts.status_approved.exists?
   end
 
-  def start!
+  def start!(at: nil)
     return false unless status_pending? || status_scheduled?
     return false unless payment_receipt_approved?
 
-    update(status: :in_progress, started_at: Time.current)
+    ts = at.presence || Time.current
+    update(status: :in_progress, started_at: ts)
   end
 
-  def complete!
+  def complete!(at: nil)
     return false unless status_in_progress?
 
-    update(status: :completed, completed_at: Time.current)
+    ts = at.presence || Time.current
+    update(status: :completed, completed_at: ts)
   end
 
   def cancel!

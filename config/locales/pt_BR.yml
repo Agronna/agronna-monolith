@@ -264,6 +264,9 @@ pt-BR:
     created: "Agendamento criado com sucesso."
     updated: "Agendamento atualizado com sucesso."
     destroyed: "Agendamento excluído com sucesso."
+    start_service_order: "Iniciar ordem de serviço"
+    complete_service_order: "Finalizar ordem de serviço"
+    service_order_execution_help: "Ao clicar em Iniciar ou Finalizar, o horário registrado é o momento do clique: atualizam-se o agendamento (início/término) e os campos started_at/completed_at da OS."
     statuses:
       scheduled: "Agendado"
       confirmed: "Confirmado"

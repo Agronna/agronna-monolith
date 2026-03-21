@@ -116,6 +116,17 @@ Para manter consistência entre a Ordem de Serviço (OS) e o Agendamento (Schedu
 
 ---
 
+## Iniciar e finalizar a Ordem de Serviço pelo agendamento
+
+Na tela de detalhes do agendamento (`/agendamentos/:id`), usuários com permissão de atualizar a OS podem:
+
+- **Iniciar ordem de serviço** (`PATCH /agendamentos/:id/iniciar-os`): chama `start!` na OS vinculada, desde que exista comprovante aprovado e a OS esteja Pendente ou Agendada. O **`started_at`** da OS e o **`scheduled_at`** do agendamento passam a ser o **date/hora do clique** (`Time.current`). O **`scheduled_at`** da OS também é alinhado. O status do agendamento passa para **Em andamento** quando estava Agendado ou Confirmado.
+- **Finalizar ordem de serviço** (`PATCH /agendamentos/:id/finalizar-os`): chama `complete!` na OS quando ela está **Em andamento**. O **`completed_at`** da OS e o **`scheduled_end_at`** do agendamento passam a ser o **momento do clique**. O agendamento é marcado como **Concluído**.
+
+As mesmas ações na **lista de ordens de serviço** só atualizam `started_at` / `completed_at` da OS com **hora atual**, sem alterar os horários do agendamento.
+
+---
+
 ## Permissões (CanCanCan)
 
 | Perfil        | Permissões |

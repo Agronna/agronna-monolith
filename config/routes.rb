@@ -32,6 +32,10 @@ Rails.application.routes.draw do
   end
 
   resources :schedules, path: "/agendamentos", path_names: { new: "novo", edit: "editar" } do
+    member do
+      patch :start_service_order, path: "iniciar-os"
+      patch :complete_service_order, path: "finalizar-os"
+    end
     collection do
       get :calendar, path: "calendario"
       get :events
