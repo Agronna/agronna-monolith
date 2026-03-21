@@ -266,7 +266,9 @@ pt-BR:
     destroyed: "Agendamento excluído com sucesso."
     start_service_order: "Iniciar ordem de serviço"
     complete_service_order: "Finalizar ordem de serviço"
-    service_order_execution_help: "Ao clicar em Iniciar ou Finalizar, o horário registrado é o momento do clique: atualizam-se o agendamento (início/término) e os campos started_at/completed_at da OS."
+    service_order_execution_help: "Ao clicar em Iniciar ou Finalizar, o horário registrado é o momento do clique: atualizam-se o agendamento (início/término)."
+    time_to_be_defined: "A definir"
+    cannot_edit_after_service_started: "Este agendamento não pode ser editado após o início da ordem de serviço (horário de início já registrado)."
     statuses:
       scheduled: "Agendado"
       confirmed: "Confirmado"

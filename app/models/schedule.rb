@@ -17,7 +17,7 @@ class Schedule < ApplicationRecord
   accepts_nested_attributes_for :schedule_machines, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :schedule_assignments, allow_destroy: true, reject_if: :all_blank
 
-  validates :scheduled_at, presence: true
+  # Início/fim são preenchidos pelos botões Iniciar/Finalizar OS na tela do agendamento (não no formulário).
   validates :secretary_id, presence: true
   validates :service_order_id, presence: true
   validates :tenant_id, presence: true
@@ -66,7 +66,10 @@ class Schedule < ApplicationRecord
   end
 
   def end_time
-    scheduled_end_at.presence || scheduled_at + 1.hour
+    return scheduled_end_at if scheduled_end_at.present?
+    return scheduled_at + 1.hour if scheduled_at.present?
+
+    nil
   end
 
   # Início exibido no calendário: prioriza a data/hora agendada na Ordem de Serviço.
@@ -76,7 +79,22 @@ class Schedule < ApplicationRecord
 
   # Fim no calendário: mantém a duração (fim - início) do registro de agendamento, ancorada em +calendar_starts_at+.
   def calendar_end_time
-    calendar_starts_at + (end_time - scheduled_at)
+    base = calendar_starts_at
+    return nil unless base
+
+    if scheduled_at.blank?
+      return base + 1.hour
+    end
+
+    et = end_time
+    return base + 1.hour unless et
+
+    base + (et - scheduled_at)
+  end
+
+  # Após iniciar a OS (scheduled_at preenchido), o agendamento não pode mais ser editado (CanCan).
+  def locked_for_editing?
+    scheduled_at.present?
   end
 
   def assigned_user_ids

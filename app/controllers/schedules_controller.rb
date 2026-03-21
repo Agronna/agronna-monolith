@@ -28,7 +28,7 @@ class SchedulesController < ApplicationController
     scope = scope.joins(:schedule_assignments).where(schedule_assignments: { user_id: @filter_user_id }).distinct if @filter_user_id.present?
 
     @schedules = scope.order(Arel.sql("COALESCE(service_orders.scheduled_at, schedules.scheduled_at)"))
-    @schedules_by_date = @schedules.group_by { |s| s.calendar_starts_at.to_date }
+    @schedules_by_date = @schedules.group_by { |s| s.calendar_starts_at&.to_date }.except(nil)
     @machines = Machine.where(tenant: Current.tenant).status_active.order(:name)
     @users = User.where(tenant: Current.tenant).order(:name)
   end
@@ -45,12 +45,16 @@ class SchedulesController < ApplicationController
     scope = scope.joins(:schedule_machines).where(schedule_machines: { machine_id: params[:machine_id] }).distinct if params[:machine_id].present?
     scope = scope.joins(:schedule_assignments).where(schedule_assignments: { user_id: params[:user_id] }).distinct if params[:user_id].present?
 
-    events = scope.map do |s|
+    events = scope.filter_map do |s|
+      start_t = s.calendar_starts_at
+      next unless start_t
+
+      end_t = s.calendar_end_time || (start_t + 1.hour)
       {
         id: s.id,
         title: s.title_for_calendar,
-        start: s.calendar_starts_at.iso8601,
-        end: s.calendar_end_time.iso8601,
+        start: start_t.iso8601,
+        end: end_t.iso8601,
         url: schedule_path(s),
         backgroundColor: schedule_color(s),
         extendedProps: {
@@ -70,8 +74,8 @@ class SchedulesController < ApplicationController
   def new
     @schedule = Schedule.new(
       tenant: Current.tenant,
-      scheduled_at: Time.current.change(hour: 8, min: 0),
-      scheduled_end_at: Time.current.change(hour: 17, min: 0)
+      scheduled_at: nil,
+      scheduled_end_at: nil
     )
     @schedule.service_order = ServiceOrder.find(params[:service_order_id]) if params[:service_order_id].present?
     @schedule.secretary = @schedule.service_order&.secretary
@@ -83,6 +87,8 @@ class SchedulesController < ApplicationController
   def create
     @schedule = Schedule.new(schedule_params)
     @schedule.tenant = Current.tenant
+    @schedule.scheduled_at = nil
+    @schedule.scheduled_end_at = nil
     sync_schedule_machines_with_service_order
     build_schedule_assignments_from_user_ids(schedule_user_ids_param)
     authorize! :create, @schedule
@@ -242,7 +248,7 @@ class SchedulesController < ApplicationController
   # Apenas atributos reais da tabela schedules. machine_ids / user_ids são handled via associações.
   def schedule_params
     params.require(:schedule).permit(
-      :scheduled_at, :scheduled_end_at, :status, :observations,
+      :status, :observations,
       :secretary_id, :service_order_id,
       :return_to,
       machine_ids: [],

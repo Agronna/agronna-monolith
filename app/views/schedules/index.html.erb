@@ -66,9 +66,14 @@
                 <% @schedules.each do |schedule| %>
                   <tr>
                     <td class="ps-3">
-                      <span class="fw-medium"><%= l(schedule.scheduled_at, format: :short) %></span>
-                      <% if schedule.scheduled_end_at.present? %>
-                        <br><small class="text-muted">até <%= l(schedule.scheduled_end_at, format: :short) %></small>
+                      <% eff = schedule.scheduled_at.presence || schedule.service_order.scheduled_at %>
+                      <% if eff %>
+                        <span class="fw-medium"><%= l(eff, format: :short) %></span>
+                        <% if schedule.scheduled_end_at.present? %>
+                          <br><small class="text-muted">até <%= l(schedule.scheduled_end_at, format: :short) %></small>
+                        <% end %>
+                      <% else %>
+                        <span class="text-muted"><%= t("schedules.time_to_be_defined") %></span>
                       <% end %>
                     </td>
                     <td>

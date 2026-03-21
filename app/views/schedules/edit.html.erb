@@ -8,7 +8,14 @@
       </ol>
     </nav>
     <h1 class="h3 mb-1">Editar Agendamento</h1>
-    <p class="text-muted mb-0"><%= @schedule.service_order.code %> - <%= l(@schedule.scheduled_at, format: :short) %></p>
+    <p class="text-muted mb-0">
+      <%= @schedule.service_order.code %>
+      <% if @schedule.scheduled_at.present? %>
+        — <%= l(@schedule.scheduled_at, format: :short) %>
+      <% else %>
+        — <span class="text-muted"><%= t("schedules.time_to_be_defined") %></span>
+      <% end %>
+    </p>
   </div>
 
   <%= render "form" %>

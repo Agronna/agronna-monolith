@@ -135,25 +135,12 @@ class ServiceOrdersController < ApplicationController
     return if schedules.empty?
 
     order_machine_ids = @service_order.machines.pluck(:id)
-    scheduled_at_changed = @service_order.saved_change_to_scheduled_at?
-    new_scheduled_at = @service_order.scheduled_at
 
     schedules.find_each do |schedule|
-      updated = false
+      next if schedule.machine_ids.sort == order_machine_ids.sort
 
-      if schedule.machine_ids.sort != order_machine_ids.sort
-        schedule.machine_ids = order_machine_ids
-        updated = true
-      end
-
-      if scheduled_at_changed && new_scheduled_at.present? && schedule.scheduled_at != new_scheduled_at
-        delta = new_scheduled_at - schedule.scheduled_at
-        schedule.scheduled_at = new_scheduled_at
-        schedule.scheduled_end_at = schedule.scheduled_end_at + delta if schedule.scheduled_end_at.present?
-        updated = true
-      end
-
-      schedule.save! if updated
+      schedule.machine_ids = order_machine_ids
+      schedule.save!
     end
   end
 end
