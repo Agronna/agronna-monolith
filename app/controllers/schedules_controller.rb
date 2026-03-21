@@ -26,8 +26,8 @@ class SchedulesController < ApplicationController
     scope = scope.joins(:schedule_machines).where(schedule_machines: { machine_id: @filter_machine_id }).distinct if @filter_machine_id.present?
     scope = scope.joins(:schedule_assignments).where(schedule_assignments: { user_id: @filter_user_id }).distinct if @filter_user_id.present?
 
-    @schedules = scope.order(:scheduled_at)
-    @schedules_by_date = @schedules.group_by { |s| s.scheduled_at.to_date }
+    @schedules = scope.order(Arel.sql("COALESCE(service_orders.scheduled_at, schedules.scheduled_at)"))
+    @schedules_by_date = @schedules.group_by { |s| s.calendar_starts_at.to_date }
     @machines = Machine.where(tenant: Current.tenant).status_active.order(:name)
     @users = User.where(tenant: Current.tenant).order(:name)
   end
@@ -48,8 +48,8 @@ class SchedulesController < ApplicationController
       {
         id: s.id,
         title: s.title_for_calendar,
-        start: s.scheduled_at.iso8601,
-        end: s.end_time.iso8601,
+        start: s.calendar_starts_at.iso8601,
+        end: s.calendar_end_time.iso8601,
         url: schedule_path(s),
         backgroundColor: schedule_color(s),
         extendedProps: {

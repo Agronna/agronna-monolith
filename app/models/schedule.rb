@@ -32,10 +32,14 @@ class Schedule < ApplicationRecord
     cancelled: 4
   }, prefix: true
 
+  # Filtra pelo que o calendário exibe: data da OS quando existir, senão a do agendamento.
   scope :for_calendar, ->(start_date, end_date) {
-    s = start_date.respond_to?(:beginning_of_day) ? start_date : start_date.to_time.beginning_of_day
-    e = end_date.respond_to?(:end_of_day) ? end_date : end_date.to_time.end_of_day
-    where(scheduled_at: s..e)
+    s = start_date.respond_to?(:beginning_of_day) ? start_date.beginning_of_day : start_date.to_time.beginning_of_day
+    e = end_date.respond_to?(:end_of_day) ? end_date.end_of_day : end_date.to_time.end_of_day
+    joins(:service_order).where(
+      "COALESCE(service_orders.scheduled_at, schedules.scheduled_at) BETWEEN ? AND ?",
+      s, e
+    )
   }
 
   def self.ransackable_attributes(auth_object = nil)
@@ -63,6 +67,16 @@ class Schedule < ApplicationRecord
 
   def end_time
     scheduled_end_at.presence || scheduled_at + 1.hour
+  end
+
+  # Início exibido no calendário: prioriza a data/hora agendada na Ordem de Serviço.
+  def calendar_starts_at
+    service_order&.scheduled_at.presence || scheduled_at
+  end
+
+  # Fim no calendário: mantém a duração (fim - início) do registro de agendamento, ancorada em +calendar_starts_at+.
+  def calendar_end_time
+    calendar_starts_at + (end_time - scheduled_at)
   end
 
   def assigned_user_ids

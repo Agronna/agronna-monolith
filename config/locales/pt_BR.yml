@@ -101,8 +101,21 @@ pt-BR:
         machines: Equipamentos
 
       service_order_machine:
+        service_order: Ordem de Serviço
         machine: Equipamento
         hours_used: Horas Utilizadas
+        notes: Observações
+
+      schedule_machine:
+        schedule: Agendamento
+        machine: Maquinário
+        hours_planned: Horas Planejadas
+        notes: Observações
+
+      schedule_assignment:
+        schedule: Agendamento
+        user: Usuário
+        role: Função
         notes: Observações
 
       payment_receipt:
@@ -147,16 +160,16 @@ pt-BR:
         user:
           attributes:
             name: 
-              blank: Nome do Usuário não pode ficar em branco
+              blank: não pode ficar em branco
             email: 
-              blank: E-mail do Usuário não pode ficar em branco
-              invalid: E-mail inválido
+              blank: não pode ficar em branco
+              invalid: inválido
             # password_digest:
             #   blank: Senha do Usuário não pode ficar em branco
             #   too_short: Senha do Usuário é muito curta (mínimo %{count} caracteres)
             password:
-              blank: Senha do Usuário não pode ficar em branco
-              too_short: Senha do Usuário é muito curta (mínimo %{count} caracteres)
+              blank: não pode ficar em branco
+              too_short: é muito curta (mínimo %{count} caracteres)
         # customer:
         #   attributes:
         #     first_name:
@@ -171,7 +184,7 @@ pt-BR:
         #       required: Loja deve ser selecionado
             
   errors:
-    format: "%{message}"
+    format: "%{attribute} %{message}"
     tenant_required: "Acesse pelo subdomínio da sua conta ou informe o header X-Tenant."
 
   sessions:

@@ -62,7 +62,7 @@
               <div class="schedule-calendar__day-events">
                 <% (@schedules_by_date[date] || []).each do |schedule| %>
                   <%= link_to schedule_path(schedule), class: "schedule-calendar__event schedule-calendar__event--#{schedule.status}", title: schedule.service_order.title, data: { turbo_frame: "_top" } do %>
-                    <span class="schedule-calendar__event-time"><%= schedule.scheduled_at.strftime("%H:%M") %></span>
+                    <span class="schedule-calendar__event-time"><%= schedule.calendar_starts_at.strftime("%H:%M") %></span>
                     <span class="schedule-calendar__event-title text-truncate"><%= schedule.service_order.code %></span>
                     <% if schedule.machines.any? %>
                       <small class="schedule-calendar__event-meta d-block text-truncate"><%= icon_svg(:tractor, width: 10, height: 10) %> <%= schedule.machines.first.name %></small>
