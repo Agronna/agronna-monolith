@@ -3,10 +3,23 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb mb-2">
         <li class="breadcrumb-item"><%= link_to "Agendamentos", schedules_path %></li>
-        <li class="breadcrumb-item active" aria-current="page"><%= l(@schedule.scheduled_at, format: :short) %></li>
+        <li class="breadcrumb-item active" aria-current="page">
+          <% if @schedule.scheduled_at.present? %>
+            <%= l(@schedule.scheduled_at, format: :short) %>
+          <% else %>
+            <%= @schedule.service_order.code %>
+          <% end %>
+        </li>
       </ol>
     </nav>
   </div>
+
+  <% if @schedule.locked_for_editing? && (current_user.admin? || current_user.account_owner? || current_user.sub_admin?) %>
+    <div class="alert alert-info d-flex align-items-start gap-2 mb-4" role="alert">
+      <%= icon_svg(:clipboard, width: 20, height: 20, class: "flex-shrink-0 mt-1") %>
+      <div class="small mb-0"><%= t("schedules.cannot_edit_after_service_started") %></div>
+    </div>
+  <% end %>
 
   <div class="row g-4">
     <div class="col-lg-8">
@@ -28,7 +41,13 @@
           </div>
           <dl class="row mb-0">
             <dt class="col-sm-3">Início</dt>
-            <dd class="col-sm-9"><%= l(@schedule.scheduled_at, format: :long) %></dd>
+            <dd class="col-sm-9">
+              <% if @schedule.scheduled_at.present? %>
+                <%= l(@schedule.scheduled_at, format: :long) %>
+              <% else %>
+                <span class="text-muted"><%= t("schedules.time_to_be_defined") %></span>
+              <% end %>
+            </dd>
             <% if @schedule.scheduled_end_at.present? %>
               <dt class="col-sm-3">Término</dt>
               <dd class="col-sm-9"><%= l(@schedule.scheduled_end_at, format: :long) %></dd>
@@ -105,13 +124,19 @@
             <p class="small text-muted mb-3"><%= t("schedules.service_order_execution_help") %></p>
             <dl class="row small mb-3">
               <dt class="col-5 text-muted">Início</dt>
-              <dd class="col-7 mb-0"><%= l(@schedule.scheduled_at, format: :short) %></dd>
+              <dd class="col-7 mb-0">
+                <% if @schedule.scheduled_at.present? %>
+                  <%= l(@schedule.scheduled_at, format: :short) %>
+                <% else %>
+                  <span class="text-muted"><%= t("schedules.time_to_be_defined") %></span>
+                <% end %>
+              </dd>
               <dt class="col-5 text-muted">Término</dt>
               <dd class="col-7 mb-0">
                 <% if @schedule.scheduled_end_at.present? %>
                   <%= l(@schedule.scheduled_end_at, format: :short) %>
                 <% else %>
-                  <span class="text-muted">— (definido ao finalizar, no horário do clique)</span>
+                  <span class="text-muted"><%= t("schedules.time_to_be_defined") %></span>
                 <% end %>
               </dd>
             </dl>

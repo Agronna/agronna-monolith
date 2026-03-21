@@ -19,7 +19,7 @@
         <div class="card-header bg-white">
           <h6 class="mb-0">
             <%= icon_svg(:calendar, width: 18, height: 18, class: "me-2") %>
-            Data e Horário
+            Ordem de serviço e horários
           </h6>
         </div>
         <div class="card-body">
@@ -33,14 +33,14 @@
               <%= f.label :secretary_id, t("activerecord.attributes.schedule.secretary"), class: "form-label" %>
               <%= f.collection_select :secretary_id, @secretaries, :id, :name, { prompt: "Selecione..." }, { class: "form-select", required: true } %>
             </div>
-            <div class="col-md-6">
-              <%= f.label :scheduled_at, t("activerecord.attributes.schedule.scheduled_at"), class: "form-label" %>
-              <%= f.datetime_local_field :scheduled_at, class: "form-control", required: true %>
+            <!--<div class="col-md-6">
+              <%#= f.label :scheduled_at, t("activerecord.attributes.schedule.scheduled_at"), class: "form-label" %>
+              <%#= f.datetime_local_field :scheduled_at, class: "form-control", required: true %>
             </div>
             <div class="col-md-6">
-              <%= f.label :scheduled_end_at, t("activerecord.attributes.schedule.scheduled_end_at"), class: "form-label" %>
-              <%= f.datetime_local_field :scheduled_end_at, class: "form-control" %>
-            </div>
+              <%#= f.label :scheduled_end_at, t("activerecord.attributes.schedule.scheduled_end_at"), class: "form-label" %>
+              <%#= f.datetime_local_field :scheduled_end_at, class: "form-control" %>
+            </div>-->
             <div class="col-md-6">
               <%= f.label :status, t("activerecord.attributes.schedule.status"), class: "form-label" %>
               <%= f.select :status, Schedule.statuses.keys.map { |s| [t("schedules.statuses.#{s}"), s] }, {}, class: "form-select" %>
@@ -115,7 +115,7 @@
       <div class="card shadow-sm mb-4">
         <div class="card-body">
           <p class="small text-muted mb-0">
-            O agendamento só é permitido após o pagamento e aprovação do comprovante da Ordem de Serviço. Aqui você define data/hora da prestação e aloca maquinário e equipe.
+            O agendamento só é permitido após o pagamento e aprovação do comprovante da Ordem de Serviço. Alocar maquinário e equipe; início e fim serão registrados pelos botões na tela do agendamento.
           </p>
         </div>
       </div>

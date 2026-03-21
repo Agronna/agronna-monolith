@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_233123) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_20_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -182,7 +182,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_233123) do
   create_table "schedules", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "observations"
-    t.datetime "scheduled_at", null: false
+    t.datetime "scheduled_at"
     t.datetime "scheduled_end_at"
     t.bigint "secretary_id", null: false
     t.bigint "service_order_id", null: false

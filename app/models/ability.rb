@@ -40,5 +40,10 @@ class Ability
       can :read, PaymentReceipt
       can :read, Schedule
     end
+
+    # Após iniciar a OS, scheduled_at fica preenchido: agendamento somente leitura (sobrescreve :manage).
+    cannot :update, Schedule do |schedule|
+      schedule.locked_for_editing?
+    end
   end
 end
