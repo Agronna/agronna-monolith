@@ -6,7 +6,7 @@ class ServiceOrderMachine < ApplicationRecord
   belongs_to :service_order
   belongs_to :machine
 
-  validates :service_order_id, presence: true
+  validates :service_order, presence: true
   validates :machine_id, presence: true, uniqueness: { scope: :service_order_id }
   validates :hours_used, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 

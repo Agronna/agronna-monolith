@@ -22,6 +22,15 @@ O **Agendamento** permite definir data/hora e alocar **maquinário** e **equipe*
 - Validação no model `Schedule`: `service_order_must_have_approved_receipt`.
 
 ---
+## Regra: Sincronização com a Ordem de Serviço
+
+Para manter consistência entre a Ordem de Serviço (OS) e o Agendamento (Schedule):
+
+- **Maquinário sincronizado (OS -> Agendamento)**: ao criar ou atualizar um `Schedule`, o maquinário do agendamento é sempre sobrescrito para ser igual ao maquinário da OS (`service_order.machines`).
+- **Data sincronizada (OS -> Agendamento)**: quando `scheduled_at` (e `scheduled_end_at`, se existir) é alterado na OS, todos os `Schedule`s vinculados a ela têm a data/hora ajustada para refletir a OS.
+- **Sem sincronização reversa**: alterar `scheduled_at` diretamente no `Schedule` **não** altera a OS.
+
+---
 
 ## Estrutura de Dados
 
@@ -64,6 +73,7 @@ O **Agendamento** permite definir data/hora e alocar **maquinário** e **equipe*
 ## Calendário Integrado
 
 - **Rota:** `/agendamentos/calendario`
+- **Data/hora no calendário:** o dia e o horário exibidos usam **`service_order.scheduled_at`** (data de agendamento na Ordem de Serviço), quando preenchido; caso contrário, usa-se `schedule.scheduled_at`. O **fim** do evento no calendário mantém a **duração** definida no agendamento (`scheduled_end_at` ou 1 hora), ancorada nesse início efetivo — não é necessário campo extra na tabela.
 - **Visualização:** Grade mensal com todos os agendamentos (status Agendado, Confirmado, Em andamento) no período.
 - **Filtros:**
   - **Por maquinário:** exibe apenas agendamentos que utilizam o maquinário selecionado → visualização da **disponibilidade** daquele equipamento (quando está ocupado).

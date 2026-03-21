@@ -6,6 +6,6 @@ class ScheduleAssignment < ApplicationRecord
   belongs_to :schedule
   belongs_to :user
 
-  validates :schedule_id, presence: true
+  validates :schedule, presence: true
   validates :user_id, presence: true, uniqueness: { scope: :schedule_id }
 end
