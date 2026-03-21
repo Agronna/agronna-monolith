@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class SchedulesController < ApplicationController
-  before_action :set_schedule, only: %i[show edit update destroy]
+  before_action :set_schedule, only: %i[start_service_order complete_service_order]
+  before_action :authorize_service_order_transition, only: %i[start_service_order complete_service_order]
   before_action :set_form_collections, only: %i[new create edit update]
-  load_and_authorize_resource except: %i[create new]
+  load_and_authorize_resource except: %i[create new start_service_order complete_service_order]
 
   def index
     @q = Schedule.where(tenant: Current.tenant)
@@ -106,6 +107,52 @@ class SchedulesController < ApplicationController
     end
   end
 
+  def start_service_order
+    order = @schedule.service_order
+
+    unless order.payment_receipt_approved?
+      redirect_to schedule_path(@schedule), alert: t("service_orders.cannot_start_no_receipt")
+      return
+    end
+
+    now = Time.current
+    ok = false
+    ActiveRecord::Base.transaction do
+      raise ActiveRecord::Rollback unless order.start!(at: now)
+
+      schedule_attrs = { scheduled_at: now }
+      schedule_attrs[:status] = :in_progress if @schedule.status_scheduled? || @schedule.status_confirmed?
+      raise ActiveRecord::Rollback unless @schedule.update(schedule_attrs)
+
+      order.update_column(:scheduled_at, now)
+      ok = true
+    end
+
+    if ok
+      redirect_to schedule_path(@schedule), notice: t("service_orders.started")
+    else
+      redirect_to schedule_path(@schedule), alert: t("service_orders.cannot_start")
+    end
+  end
+
+  def complete_service_order
+    order = @schedule.service_order
+    now = Time.current
+
+    ok = false
+    ActiveRecord::Base.transaction do
+      raise ActiveRecord::Rollback unless order.complete!(at: now)
+      raise ActiveRecord::Rollback unless @schedule.update(scheduled_end_at: now, status: :completed)
+      ok = true
+    end
+
+    if ok
+      redirect_to schedule_path(@schedule), notice: t("service_orders.completed")
+    else
+      redirect_to schedule_path(@schedule), alert: t("service_orders.cannot_complete")
+    end
+  end
+
   def destroy
     service_order = @schedule.service_order
     @schedule.destroy
@@ -119,7 +166,12 @@ class SchedulesController < ApplicationController
   private
 
   def set_schedule
-    @schedule = Schedule.find(params[:id])
+    @schedule = Schedule.includes(:service_order).find(params[:id])
+  end
+
+  def authorize_service_order_transition
+    authorize! :read, @schedule
+    authorize! :update, @schedule.service_order
   end
 
   def set_form_collections

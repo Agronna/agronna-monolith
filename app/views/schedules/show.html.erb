@@ -87,8 +87,49 @@
           <h6 class="text-muted small">Ordem de Serviço</h6>
           <%= link_to @schedule.service_order.code, service_order_path(@schedule.service_order), class: "fw-medium", data: { turbo_frame: "_top" } %>
           <p class="text-muted small mb-0 mt-1"><%= @schedule.service_order.title %></p>
+          <div class="mt-2">
+            <span class="badge <%= @schedule.service_order.status_badge_class %>">
+              <%= t("service_orders.statuses.#{@schedule.service_order.status}") %>
+            </span>
+          </div>
         </div>
       </div>
+
+      <% order = @schedule.service_order %>
+      <% if can?(:update, order) && !@schedule.status_cancelled? && !order.status_cancelled? && !order.status_completed? %>
+        <div class="card shadow-sm mb-4">
+          <div class="card-header bg-white">
+            <h6 class="mb-0"><%= icon_svg(:clipboard, width: 18, height: 18, class: "me-2") %> Execução da OS</h6>
+          </div>
+          <div class="card-body">
+            <p class="small text-muted mb-3"><%= t("schedules.service_order_execution_help") %></p>
+            <dl class="row small mb-3">
+              <dt class="col-5 text-muted">Início</dt>
+              <dd class="col-7 mb-0"><%= l(@schedule.scheduled_at, format: :short) %></dd>
+              <dt class="col-5 text-muted">Término</dt>
+              <dd class="col-7 mb-0">
+                <% if @schedule.scheduled_end_at.present? %>
+                  <%= l(@schedule.scheduled_end_at, format: :short) %>
+                <% else %>
+                  <span class="text-muted">— (definido ao finalizar, no horário do clique)</span>
+                <% end %>
+              </dd>
+            </dl>
+            <div class="d-grid gap-2">
+              <% if (order.status_pending? || order.status_scheduled?) && order.payment_receipt_approved? %>
+                <%= button_to t("schedules.start_service_order"), start_service_order_schedule_path(@schedule), method: :patch, class: "btn btn-success", data: { turbo_confirm: "Iniciar agora? O início do agendamento e da OS será o horário deste clique." } %>
+              <% elsif order.status_pending? || order.status_scheduled? %>
+                <p class="small text-warning mb-0"><%= t("service_orders.cannot_start_no_receipt") %></p>
+              <% end %>
+
+              <% if order.status_in_progress? %>
+                <%= button_to t("schedules.complete_service_order"), complete_service_order_schedule_path(@schedule), method: :patch, class: "btn btn-outline-success", data: { turbo_confirm: "Finalizar agora? O término do agendamento e da OS será o horário deste clique." } %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
       <div class="d-grid gap-2">
         <%= link_to "Ver calendário", calendar_schedules_path, class: "btn btn-outline-primary" %>
         <%= link_to "Voltar à lista", schedules_path, class: "btn btn-outline-secondary" %>
