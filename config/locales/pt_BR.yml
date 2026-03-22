@@ -44,6 +44,27 @@ pt-BR:
         password_digest: Senha do Usuário
         password_reset_token: Redefinição de Senha do Usuário
         password: Senha do Usuário
+        secretary: Secretaria
+        job_title: Cargo
+        hired_on: Data de contratação
+
+      user_performance_record:
+        recorded_on: Data do registro
+        title: Título
+        notes: Observações
+        rating: Avaliação (1 a 5)
+
+      user_goal:
+        title: Meta
+        description: Descrição
+        target_date: Prazo
+        status: Situação
+
+      user_feedback:
+        feedback_on: Data do feedback
+        kind: Tipo
+        given_by: Registrado por
+        content: Conteúdo
 
       producer:
         name: Nome
@@ -197,6 +218,19 @@ pt-BR:
   home:
     name: Início
 
+  # Textos dos botões f.submit por modelo (evita "Create user performance record" em inglês)
+  helpers:
+    submit:
+      user_performance_record:
+        create: "Salvar registro"
+        update: "Atualizar registro"
+      user_goal:
+        create: "Salvar meta"
+        update: "Atualizar meta"
+      user_feedback:
+        create: "Registrar feedback"
+        update: "Atualizar feedback"
+
   secretaries:
     created: "Secretária criada com sucesso."
     updated: "Secretária atualizada com sucesso."
@@ -217,6 +251,73 @@ pt-BR:
     created: "Prestador de serviço cadastrado com sucesso."
     updated: "Prestador de serviço atualizado com sucesso."
     destroyed: "Prestador de serviço excluído com sucesso."
+
+  users:
+    created: "Usuário cadastrado com sucesso."
+    updated: "Usuário atualizado com sucesso."
+    employee:
+      title: "Funcionário da secretaria"
+      breadcrumb_list: "Usuários"
+      section_summary: "Dados cadastrais"
+      role_label: "Perfil de acesso"
+      edit_registration: "Editar cadastro"
+      back_to_list: "Voltar à lista"
+      tab_performance: "Desempenho"
+      tab_goals: "Metas"
+      tab_feedback: "Feedbacks"
+      performance_heading: "Registros de desempenho"
+      new_performance: "Novo registro"
+      new_performance_title: "Novo registro de desempenho"
+      edit_performance_title: "Editar registro de desempenho"
+      performance_form_section_title: "Registro de desempenho"
+      performance_rating_help: "Opcional. Escala de 1 a 5."
+      performance_title_placeholder: "Ex.: Avaliação trimestral"
+      performance_notes_placeholder: "Comentários sobre o desempenho, entregas e pontos de atenção..."
+      sidebar_performance_help: "Registre avaliações periódicas ou pontuais. A nota é opcional (1 a 5)."
+      goal_form_section_title: "Meta"
+      goal_description_placeholder: "Detalhe o objetivo e critérios de sucesso..."
+      sidebar_goal_help: "Defina metas com prazo e acompanhe a situação até a conclusão."
+      feedback_form_section_title: "Feedback"
+      feedback_content_placeholder: "Descreva o feedback de forma objetiva..."
+      sidebar_feedback_help: "Registre retornos sobre o trabalho do colaborador. Indique quem está registrando quando for outra pessoa."
+      goals_heading: "Metas"
+      new_goal: "Nova meta"
+      new_goal_title: "Nova meta"
+      edit_goal_title: "Editar meta"
+      goal_statuses:
+        pending: "Pendente"
+        in_progress: "Em andamento"
+        achieved: "Alcançada"
+        cancelled: "Cancelada"
+      feedback_heading: "Feedbacks"
+      new_feedback: "Novo feedback"
+      new_feedback_title: "Novo feedback"
+      edit_feedback_title: "Editar feedback"
+      feedback_kinds:
+        general: "Geral"
+        positive: "Positivo"
+        improvement: "Melhoria"
+      feedback_giver_blank: "—"
+      feedback_giver_help: "Quem registrou o feedback (padrão: usuário logado)."
+      empty_performance: "Nenhum registro de desempenho ainda."
+      empty_goals: "Nenhuma meta cadastrada."
+      empty_feedback: "Nenhum feedback registrado."
+      actions: "Ações"
+      edit_short: "Editar"
+      delete_short: "Excluir"
+      confirm_delete: "Excluir este registro?"
+      cancel: "Cancelar"
+      view_profile: "Ficha"
+      performance_created: "Registro de desempenho criado."
+      performance_updated: "Registro de desempenho atualizado."
+      performance_destroyed: "Registro de desempenho excluído."
+      goal_created: "Meta cadastrada."
+      goal_updated: "Meta atualizada."
+      goal_destroyed: "Meta excluída."
+      feedback_created: "Feedback registrado."
+      feedback_updated: "Feedback atualizado."
+      feedback_destroyed: "Feedback excluído."
+      placeholder_job_title: "Ex.: Assistente administrativo"
 
   service_orders:
     created: "Ordem de serviço criada com sucesso."

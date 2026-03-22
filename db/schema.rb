@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_20_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_21_100004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -275,9 +275,54 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_20_120000) do
     t.index ["subdomain"], name: "index_tenants_on_subdomain", unique: true
   end
 
+  create_table "user_feedbacks", force: :cascade do |t|
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.date "feedback_on", null: false
+    t.bigint "given_by_id"
+    t.integer "kind", default: 0, null: false
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["given_by_id"], name: "index_user_feedbacks_on_given_by_id"
+    t.index ["tenant_id"], name: "index_user_feedbacks_on_tenant_id"
+    t.index ["user_id", "feedback_on"], name: "index_user_feedbacks_on_user_id_and_feedback_on"
+    t.index ["user_id"], name: "index_user_feedbacks_on_user_id"
+  end
+
+  create_table "user_goals", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "status", default: 0, null: false
+    t.date "target_date"
+    t.bigint "tenant_id", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["tenant_id"], name: "index_user_goals_on_tenant_id"
+    t.index ["user_id", "status"], name: "index_user_goals_on_user_id_and_status"
+    t.index ["user_id"], name: "index_user_goals_on_user_id"
+  end
+
+  create_table "user_performance_records", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "notes"
+    t.integer "rating"
+    t.date "recorded_on", null: false
+    t.bigint "tenant_id", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["tenant_id"], name: "index_user_performance_records_on_tenant_id"
+    t.index ["user_id", "recorded_on"], name: "index_user_performance_records_on_user_id_and_recorded_on"
+    t.index ["user_id"], name: "index_user_performance_records_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
+    t.date "hired_on"
+    t.string "job_title"
     t.string "name", null: false
     t.string "password_digest", null: false
     t.integer "role", default: 0, null: false
@@ -321,6 +366,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_20_120000) do
   add_foreign_key "service_providers", "secretaries"
   add_foreign_key "service_providers", "tenants"
   add_foreign_key "tenants", "users", column: "owner_id"
+  add_foreign_key "user_feedbacks", "tenants"
+  add_foreign_key "user_feedbacks", "users"
+  add_foreign_key "user_feedbacks", "users", column: "given_by_id"
+  add_foreign_key "user_goals", "tenants"
+  add_foreign_key "user_goals", "users"
+  add_foreign_key "user_performance_records", "tenants"
+  add_foreign_key "user_performance_records", "users"
   add_foreign_key "users", "secretaries"
   add_foreign_key "users", "tenants"
 end

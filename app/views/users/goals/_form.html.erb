@@ -1,0 +1,61 @@
+<%= form_with model: @goal, url: (@goal.persisted? ? user_goal_path(@user, @goal) : user_goals_path(@user)), local: true, html: { class: "needs-validation" } do |f| %>
+  <% if @goal.errors.any? %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Atenção!</strong> <%= pluralize(@goal.errors.count, "erro encontrado", "erros encontrados") %>:
+      <ul class="mb-0 mt-2">
+        <% @goal.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+  <% end %>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:clipboard, width: 18, height: 18, class: "me-2") %>
+            <%= t("users.employee.goal_form_section_title") %>
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <%= f.label :title, class: "form-label" %>
+              <%= f.text_field :title, class: "form-control", required: true %>
+            </div>
+            <div class="col-md-6">
+              <%= f.label :target_date, class: "form-label" %>
+              <%= f.date_field :target_date, class: "form-control" %>
+            </div>
+            <div class="col-md-6">
+              <%= f.label :status, class: "form-label" %>
+              <%= f.select :status, UserGoal.statuses.keys.map { |k| [ t("users.employee.goal_statuses.#{k}"), k ] }, {}, class: "form-select" %>
+            </div>
+            <div class="col-12">
+              <%= f.label :description, class: "form-label" %>
+              <%= f.text_area :description, class: "form-control", rows: 4, placeholder: t("users.employee.goal_description_placeholder") %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <p class="small text-muted mb-0"><%= t("users.employee.sidebar_goal_help") %></p>
+        </div>
+      </div>
+      <div class="d-grid gap-2">
+        <%= f.submit(
+              @goal.persisted? ? t("helpers.submit.user_goal.update") : t("helpers.submit.user_goal.create"),
+              class: "btn btn-primary btn-lg"
+            ) %>
+        <%= link_to t("users.employee.cancel"), user_path(@user), class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -14,7 +14,11 @@ Rails.application.routes.draw do
   resources :machines, path: "/maquinarios", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
   resources :properties, path: "/propriedades", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
   resources :service_providers, path: "/prestadores", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
-  resources :users, path: "/usuarios", only: [ :index, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" }
+  resources :users, path: "/usuarios", only: [ :index, :show, :new, :create, :edit, :update, :destroy ], path_names: { new: "cadastrar", edit: "editar" } do
+    resources :performance_records, module: :users, path: "desempenho", only: [ :new, :create, :edit, :update, :destroy ], path_names: { new: "novo", edit: "editar" }
+    resources :goals, module: :users, path: "metas", only: [ :new, :create, :edit, :update, :destroy ], path_names: { new: "novo", edit: "editar" }
+    resources :feedbacks, module: :users, path: "feedbacks", only: [ :new, :create, :edit, :update, :destroy ], path_names: { new: "novo", edit: "editar" }
+  end
 
   resources :service_orders, path: "/ordens-servico", path_names: { new: "cadastrar", edit: "editar" } do
     member do
