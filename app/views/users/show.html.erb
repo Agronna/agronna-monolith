@@ -1,0 +1,187 @@
+<div class="container-fluid py-4">
+  <div class="mb-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><%= link_to t("users.employee.breadcrumb_list"), users_path %></li>
+        <li class="breadcrumb-item active" aria-current="page"><%= @user.name %></li>
+      </ol>
+    </nav>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+      <div>
+        <h1 class="h3 mb-1"><%= t("users.employee.title") %></h1>
+        <p class="text-muted mb-0"><%= @user.email %></p>
+      </div>
+      <div class="d-flex gap-2">
+        <% if can?(:update, @user) %>
+          <%= link_to t("users.employee.edit_registration"), edit_user_path(@user), class: "btn btn-primary" %>
+        <% end %>
+        <%= link_to t("users.employee.back_to_list"), users_path, class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h6 text-muted text-uppercase mb-3"><%= t("users.employee.section_summary") %></h2>
+      <dl class="row mb-0">
+        <dt class="col-sm-3"><%= User.human_attribute_name(:secretary) %></dt>
+        <dd class="col-sm-9"><%= @user.secretary&.name || "—" %></dd>
+        <dt class="col-sm-3"><%= User.human_attribute_name(:job_title) %></dt>
+        <dd class="col-sm-9"><%= @user.job_title.presence || "—" %></dd>
+        <dt class="col-sm-3"><%= User.human_attribute_name(:hired_on) %></dt>
+        <dd class="col-sm-9"><%= @user.hired_on.present? ? l(@user.hired_on) : "—" %></dd>
+        <dt class="col-sm-3"><%= t("users.employee.role_label") %></dt>
+        <dd class="col-sm-9">
+          <% case @user.role %>
+          <% when "admin" %>
+            <span class="badge bg-danger">Admin</span>
+          <% when "sub_admin" %>
+            <span class="badge bg-warning text-dark">Sub-admin</span>
+          <% else %>
+            <span class="badge bg-secondary">User</span>
+          <% end %>
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <ul class="nav nav-tabs mb-3" id="employeeTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="perf-tab" data-bs-toggle="tab" data-bs-target="#perf-panel" type="button" role="tab"><%= t("users.employee.tab_performance") %></button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="goals-tab" data-bs-toggle="tab" data-bs-target="#goals-panel" type="button" role="tab"><%= t("users.employee.tab_goals") %></button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="fb-tab" data-bs-toggle="tab" data-bs-target="#fb-panel" type="button" role="tab"><%= t("users.employee.tab_feedback") %></button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="employeeTabsContent">
+    <div class="tab-pane fade show active" id="perf-panel" role="tabpanel">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="h6 mb-0"><%= t("users.employee.performance_heading") %></h3>
+        <% if can?(:update, @user) %>
+          <%= link_to t("users.employee.new_performance"), new_user_performance_record_path(@user), class: "btn btn-sm btn-primary" %>
+        <% end %>
+      </div>
+      <% if @user.user_performance_records.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th><%= UserPerformanceRecord.human_attribute_name(:recorded_on) %></th>
+                <th><%= UserPerformanceRecord.human_attribute_name(:title) %></th>
+                <th><%= UserPerformanceRecord.human_attribute_name(:rating) %></th>
+                <th><%= UserPerformanceRecord.human_attribute_name(:notes) %></th>
+                <th class="text-end"><%= t("users.employee.actions") %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @user.user_performance_records.each do |rec| %>
+                <tr>
+                  <td><%= l(rec.recorded_on) %></td>
+                  <td><%= rec.title.presence || "—" %></td>
+                  <td><%= rec.rating.present? ? "#{rec.rating}/5" : "—" %></td>
+                  <td><%= truncate(rec.notes.to_s, length: 80) %></td>
+                  <td class="text-end">
+                    <% if can?(:update, @user) %>
+                      <%= link_to t("users.employee.edit_short"), edit_user_performance_record_path(@user, rec), class: "btn btn-sm btn-outline-primary me-1" %>
+                      <%= button_to t("users.employee.delete_short"), user_performance_record_path(@user, rec), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: t("users.employee.confirm_delete") } %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted mb-0"><%= t("users.employee.empty_performance") %></p>
+      <% end %>
+    </div>
+
+    <div class="tab-pane fade" id="goals-panel" role="tabpanel">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="h6 mb-0"><%= t("users.employee.goals_heading") %></h3>
+        <% if can?(:update, @user) %>
+          <%= link_to t("users.employee.new_goal"), new_user_goal_path(@user), class: "btn btn-sm btn-primary" %>
+        <% end %>
+      </div>
+      <% if @user.user_goals.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th><%= UserGoal.human_attribute_name(:title) %></th>
+                <th><%= UserGoal.human_attribute_name(:target_date) %></th>
+                <th><%= UserGoal.human_attribute_name(:status) %></th>
+                <th><%= UserGoal.human_attribute_name(:description) %></th>
+                <th class="text-end"><%= t("users.employee.actions") %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @user.user_goals.each do |goal| %>
+                <tr>
+                  <td><%= goal.title %></td>
+                  <td><%= goal.target_date.present? ? l(goal.target_date) : "—" %></td>
+                  <td><span class="badge bg-secondary"><%= t("users.employee.goal_statuses.#{goal.status}") %></span></td>
+                  <td><%= truncate(goal.description.to_s, length: 80) %></td>
+                  <td class="text-end">
+                    <% if can?(:update, @user) %>
+                      <%= link_to t("users.employee.edit_short"), edit_user_goal_path(@user, goal), class: "btn btn-sm btn-outline-primary me-1" %>
+                      <%= button_to t("users.employee.delete_short"), user_goal_path(@user, goal), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: t("users.employee.confirm_delete") } %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted mb-0"><%= t("users.employee.empty_goals") %></p>
+      <% end %>
+    </div>
+
+    <div class="tab-pane fade" id="fb-panel" role="tabpanel">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="h6 mb-0"><%= t("users.employee.feedback_heading") %></h3>
+        <% if can?(:update, @user) %>
+          <%= link_to t("users.employee.new_feedback"), new_user_feedback_path(@user), class: "btn btn-sm btn-primary" %>
+        <% end %>
+      </div>
+      <% if @user.user_feedbacks.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th><%= UserFeedback.human_attribute_name(:feedback_on) %></th>
+                <th><%= UserFeedback.human_attribute_name(:kind) %></th>
+                <th><%= UserFeedback.human_attribute_name(:given_by) %></th>
+                <th><%= UserFeedback.human_attribute_name(:content) %></th>
+                <th class="text-end"><%= t("users.employee.actions") %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @user.user_feedbacks.each do |fb| %>
+                <tr>
+                  <td><%= l(fb.feedback_on) %></td>
+                  <td><%= t("users.employee.feedback_kinds.#{fb.kind}") %></td>
+                  <td><%= fb.given_by&.name || "—" %></td>
+                  <td><%= truncate(fb.content, length: 100) %></td>
+                  <td class="text-end">
+                    <% if can?(:update, @user) %>
+                      <%= link_to t("users.employee.edit_short"), edit_user_feedback_path(@user, fb), class: "btn btn-sm btn-outline-primary me-1" %>
+                      <%= button_to t("users.employee.delete_short"), user_feedback_path(@user, fb), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: t("users.employee.confirm_delete") } %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted mb-0"><%= t("users.employee.empty_feedback") %></p>
+      <% end %>
+    </div>
+  </div>
+</div>

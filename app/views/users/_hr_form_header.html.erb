@@ -1,0 +1,17 @@
+<%# locals: page_title (String) %>
+<div class="mb-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-2">
+      <li class="breadcrumb-item"><%= link_to t("users.employee.breadcrumb_list"), users_path %></li>
+      <li class="breadcrumb-item"><%= link_to @user.name, user_path(@user) %></li>
+      <li class="breadcrumb-item active" aria-current="page"><%= page_title %></li>
+    </ol>
+  </nav>
+  <h1 class="h3 mb-1"><%= page_title %></h1>
+  <p class="text-muted mb-0">
+    <%= @user.name %> — <%= @user.email %>
+    <% if @user.secretary %>
+      — <%= @user.secretary.name %>
+    <% end %>
+  </p>
+</div>

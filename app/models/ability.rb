@@ -19,7 +19,8 @@ class Ability
       can :manage, Schedule
 
     elsif user.sub_admin?
-      can %i[read update], User, id: user.id
+      can :read, User
+      can :update, User, id: user.id
       can %i[read create update], Secretary
       can %i[read create update], Producer
       can %i[read create update], Machine

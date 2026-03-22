@@ -26,12 +26,12 @@ Qualquer outro parâmetro é repassado como atributo HTML do `<svg>` (ex.: `data
 |---------------|------------------------------------------|
 | `dashboard`   | Menu Dashboard (home)                    |
 | `calendar`    | Agendamento                              |
-| `chart`       | Ativos e Passivos                        |
-| `receipt`     | Comprovantes de Pagamento                |
+| `chart`       | Ativos e Passivos; formulário de **desempenho** do funcionário (`docs/FUNCIONARIOS_SECRETARIA.md`) |
+| `receipt`     | Comprovantes de Pagamento; formulário de **feedbacks** do funcionário |
 | `users`       | Usuários, grupos                         |
 | `user`        | Produtores, perfil                       |
 | `building`    | Prédio/instituição (KPI secretarias)     |
-| `clipboard`   | Ordem de Serviço                         |
+| `clipboard`   | Ordem de Serviço; formulário de **metas** do funcionário (`docs/FUNCIONARIOS_SECRETARIA.md`) |
 | `wrench`      | Prestadores de Serviços                  |
 | `tractor`     | Maquinários                              |
 | `land`        | Propriedades                             |

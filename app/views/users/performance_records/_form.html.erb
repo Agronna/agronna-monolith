@@ -1,0 +1,62 @@
+<%= form_with model: @performance_record, url: (@performance_record.persisted? ? user_performance_record_path(@user, @performance_record) : user_performance_records_path(@user)), local: true, html: { class: "needs-validation" } do |f| %>
+  <% if @performance_record.errors.any? %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Atenção!</strong> <%= pluralize(@performance_record.errors.count, "erro encontrado", "erros encontrados") %>:
+      <ul class="mb-0 mt-2">
+        <% @performance_record.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+  <% end %>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <%= icon_svg(:chart, width: 18, height: 18, class: "me-2") %>
+            <%= t("users.employee.performance_form_section_title") %>
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <%= f.label :recorded_on, class: "form-label" %>
+              <%= f.date_field :recorded_on, class: "form-control", required: true %>
+            </div>
+            <div class="col-md-6">
+              <%= f.label :title, class: "form-label" %>
+              <%= f.text_field :title, class: "form-control", placeholder: t("users.employee.performance_title_placeholder") %>
+            </div>
+            <div class="col-md-6">
+              <%= f.label :rating, class: "form-label" %>
+              <%= f.select :rating, options_for_select([["—", ""]] + (1..5).map { |n| [ "#{n}/5", n ] }, @performance_record.rating), {}, class: "form-select" %>
+              <div class="form-text"><%= t("users.employee.performance_rating_help") %></div>
+            </div>
+            <div class="col-12">
+              <%= f.label :notes, class: "form-label" %>
+              <%= f.text_area :notes, class: "form-control", rows: 5, placeholder: t("users.employee.performance_notes_placeholder") %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <p class="small text-muted mb-0"><%= t("users.employee.sidebar_performance_help") %></p>
+        </div>
+      </div>
+      <div class="d-grid gap-2">
+        <%= f.submit(
+              @performance_record.persisted? ? t("helpers.submit.user_performance_record.update") : t("helpers.submit.user_performance_record.create"),
+              class: "btn btn-primary btn-lg"
+            ) %>
+        <%= link_to t("users.employee.cancel"), user_path(@user), class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+<% end %>

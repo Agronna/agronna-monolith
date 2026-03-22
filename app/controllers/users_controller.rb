@@ -3,12 +3,17 @@
 # Apenas admin pode cadastrar sub-admins (usuários da secretaria).
 # Sub-admin e user podem apenas editar o próprio perfil.
 class UsersController < ApplicationController
-  load_and_authorize_resource except: [ :create, :new ]
+  load_and_authorize_resource except: [ :create, :new, :show ]
 
   def index
     @q = User.ransack(params[:q])
     @q.sorts = "name asc" if @q.sorts.empty?
     @pagy, @users = pagy(:offset, @q.result.includes(:secretary), limit: 15)
+  end
+
+  def show
+    @user = User.includes(:secretary, :user_performance_records, :user_goals, user_feedbacks: :given_by).find(params[:id])
+    authorize! :read, @user
   end
 
   def new
@@ -45,7 +50,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    p = params.require(:user).permit(:name, :email, :password, :password_confirmation, :role, :secretary_id)
+    p = params.require(:user).permit(:name, :email, :password, :password_confirmation, :role, :secretary_id, :job_title, :hired_on)
     unless current_user&.admin?
       p.delete(:role)
     else
@@ -57,7 +62,7 @@ class UsersController < ApplicationController
   end
 
   def update_params
-    list = [ :name, :email, :secretary_id ]
+    list = [ :name, :email, :secretary_id, :job_title, :hired_on ]
     list << :role if current_user&.admin?
     list << :password << :password_confirmation if params[:user][:password].present?
     params.require(:user).permit(list)

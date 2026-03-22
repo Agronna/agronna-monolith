@@ -8,6 +8,11 @@ class User < ApplicationRecord
   has_many :schedule_assignments, dependent: :restrict_with_error
   has_many :schedules, through: :schedule_assignments
 
+  has_many :user_performance_records, -> { order(recorded_on: :desc) }, dependent: :destroy, inverse_of: :user
+  has_many :user_goals, -> { order(target_date: :asc, created_at: :desc) }, dependent: :destroy, inverse_of: :user
+  has_many :user_feedbacks, -> { order(feedback_on: :desc) }, dependent: :destroy, inverse_of: :user
+  has_many :feedbacks_given, class_name: "UserFeedback", foreign_key: :given_by_id, dependent: :nullify, inverse_of: :given_by
+
   has_secure_password
 
   enum :role, { user: 0, sub_admin: 1, admin: 2 }, prefix: true
@@ -44,7 +49,7 @@ class User < ApplicationRecord
 
   # Ransack: atributos e associações permitidos para busca
   def self.ransackable_attributes(auth_object = nil)
-    %w[name email created_at role secretary_id]
+    %w[name email created_at role secretary_id job_title hired_on]
   end
 
   def self.ransackable_associations(auth_object = nil)
